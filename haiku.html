@@ -3,1706 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>俳句をたのしもう！ - 小学校３年生 国語</title>
-    <!-- Tailwind CSS for styling -->
+    <title>はい句づくりアプリ - 国語</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Zen Maru Gothic for kid-friendly rounded font -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
-    
     <style>
         body {
             font-family: 'Zen Maru Gothic', sans-serif;
-            background-color: #fcf8f2; /* Warm Japanese paper color */
+            /* 和風の背景色 */
+            background-color: #fcfaf2; 
+            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 20px 20px;
         }
-        /* Custom animations */
-        .bounce-in {
-            animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
-        }
-        @keyframes bounceIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-            70% { transform: scale(0.9); opacity: 0.9; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        /* Elegant waving animation for Tanzaku (Haiku Card) */
-        .waving-card {
-            animation: wave 3s ease-in-out infinite;
-            transform-origin: top center;
-        }
-        @keyframes wave {
-            0%, 100% { transform: rotate(-1deg); }
-            50% { transform: rotate(1deg); }
-        }
-        
-        /* Perfect Japanese Vertical Typography Settings */
-        .vertical-text {
+        .writing-vertical {
             writing-mode: vertical-rl;
-            -webkit-writing-mode: vertical-rl;
             text-orientation: upright;
-            -webkit-text-orientation: upright;
-            letter-spacing: 0.18em;
-            display: inline-block;
-            white-space: nowrap;
-            line-height: 1.5;
-            font-family: 'Zen Maru Gothic', sans-serif;
-        }
-
-        /* Print Styles for Tanzaku */
-        @media print {
-            body * { visibility: hidden; }
-            #print-area, #print-area * { visibility: visible; }
-            #print-area { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(1.2); width: 280px; }
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between overflow-x-hidden">
+<body class="min-h-screen flex flex-col items-center py-10 px-4">
 
-<header class="bg-gradient-to-r from-pink-400 via-amber-200 to-emerald-400 text-slate-800 shadow-md">
-    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-        <div class="flex items-center space-x-2">
-            <!-- Cute SVG Japanese Fan Mascot -->
-            <svg class="w-12 h-12 bg-white rounded-full p-1 shadow-sm" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M50 85C30 85 15 55 15 50C15 45 30 15 50 15C70 15 85 45 85 50C85 55 70 85 50 85Z" fill="#FFE4E6"/>
-                <circle cx="50" cy="50" r="40" stroke="#F43F5E" stroke-width="2" stroke-dasharray="5,5"/>
-                <path d="M50 85V75" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
-                <path d="M40 82L45 74" stroke="#475569" stroke-width="3" stroke-linecap="round"/>
-                <path d="M60 82L55 74" stroke="#475569" stroke-width="3" stroke-linecap="round"/>
-                <circle cx="42" cy="45" r="4" fill="#1E293B"/>
-                <circle cx="58" cy="45" r="4" fill="#1E293B"/>
-                <circle cx="38" cy="49" r="2.5" fill="#F43F5E" opacity="0.6"/>
-                <circle cx="62" cy="49" r="2.5" fill="#F43F5E" opacity="0.6"/>
-                <path d="M47 52Q50 54 53 52" stroke="#1E293B" stroke-width="2" stroke-linecap="round" fill="none"/>
-            </svg>
-            <div>
-                <h1 class="text-xl md:text-2xl font-black tracking-wide flex items-center text-slate-900">
-                    <ruby>俳句<rt>はいく</rt></ruby>をたのしもう！
-                </h1>
-                <p class="text-xs text-rose-900 font-bold">小学校３年　国語（光村図書）</p>
-            </div>
-        </div>
-        <!-- Reset/Home Button -->
-        <button onclick="changeTab('home')" class="bg-white hover:bg-rose-50 text-rose-700 font-black py-1.5 px-4 rounded-full border-2 border-rose-300 shadow-sm transition-all text-sm">
-            🌸 さいしょに
+<!-- なまえ入力モーダル -->
+<div id="name-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-8 w-full max-w-sm text-center shadow-2xl border-4 border-emerald-400">
+        <div class="text-6xl mb-4">📛</div>
+        <h2 class="text-2xl font-black text-slate-800 mb-2">なまえを おしえてね</h2>
+        <input type="text" id="student-name-input" placeholder="ひらがな または 漢字" class="w-full bg-slate-50 border-2 border-slate-300 rounded-xl px-4 py-3 text-lg font-bold text-center mb-6 focus:outline-none focus:border-emerald-500">
+        <button onclick="saveName()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-black py-3 rounded-xl border-b-4 border-emerald-700 shadow">
+            スタート！
         </button>
     </div>
-</header>
+</div>
 
-<!-- Main Container -->
-<main class="flex-grow max-w-5xl w-full mx-auto p-4 flex flex-col justify-start">
-    
-    <!-- Toast notifications -->
-    <div id="toast-container" class="fixed top-5 right-5 z-50 pointer-events-none"></div>
+<!-- 通知用トースト -->
+<div id="toast-container" class="fixed top-5 right-5 z-50 pointer-events-none"></div>
 
-    <!-- HOME TAB -->
-    <div id="tab-home" class="tab-content block space-y-6 bounce-in">
-        <!-- Hero Card -->
-        <div class="bg-white rounded-3xl p-6 shadow-lg border-4 border-amber-200 flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-8">
-            <div class="flex-1 space-y-4">
-                <span class="inline-block bg-rose-100 text-rose-800 text-xs px-3 py-1.5 rounded-full font-bold">
-                    <ruby>３年生国語<rt>さんねんせいこくご</rt></ruby>「俳句をたのしもう」
-                </span>
-                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 leading-snug">
-                    ご・しち・ご（５・７・５）で<br>
-                    きせつの絵の具を えがこう！
-                </h2>
-                <p class="text-slate-600 leading-relaxed text-sm md:text-base">
-                    俳句（はいく）は、たったの<ruby>17音<rt>じゅうななおん</rt></ruby>で作る、世界一みじかい詩（うた）です。<br>
-                    季節（きせつ）の言葉「季語（きご）」を入れたり、歌のリズムからみつけたりして遊ぼう！
-                </p>
-            </div>
-            <!-- Quick Interactive Demo -->
-            <div class="w-full md:w-64 bg-rose-50/50 rounded-2xl p-4 border-2 border-rose-200 text-center relative waving-card">
-                <div class="absolute -top-3 -right-3 bg-red-400 text-white font-bold text-xs px-2 py-1 rounded-full rotate-12">
-                    おみごと！
-                </div>
-                <p class="text-xs text-rose-700 font-bold mb-2">★ これ、な〜んだ？ ★</p>
-                <div class="bg-white p-3 rounded-xl border border-rose-100 text-sm mb-3">
-                    「古池（ふるいけ）や<br>
-                    かわず飛びこむ<br>
-                    みずの音」<br>
-                    <span class="text-xs text-slate-400 font-bold">（松尾芭蕉）</span>
-                </div>
-                <p class="text-[11px] text-rose-900 font-bold bg-white p-1.5 rounded border border-rose-150">
-                    🐸 「かわず」はカエルのこと！
-                </p>
-            </div>
-        </div>
-
-        <!-- Modes Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            <!-- Mode 1: Learn -->
-            <div class="bg-gradient-to-b from-rose-50 to-rose-100 rounded-3xl p-4 border-4 border-rose-300 shadow-md hover:shadow-xl transition-all flex flex-col justify-between">
-                <div class="space-y-2">
-                    <div class="bg-rose-400 text-white w-9 h-9 rounded-xl flex items-center justify-center text-sm shadow-inner font-bold">①</div>
-                    <h3 class="text-base font-bold text-rose-950 leading-tight">
-                        <ruby>俳句<rt>はいく</rt></ruby>を知る
-                    </h3>
-                    <p class="text-[11px] text-rose-800 leading-relaxed">
-                        「５・７・５」のリズムや、季節をあらわす「季語（きご）」など、基本（きほん）のルールをまなびます。
-                    </p>
-                </div>
-                <button onclick="changeTab('learn')" class="mt-4 w-full bg-rose-500 hover:bg-rose-400 text-white font-black py-2 rounded-xl border-b-4 border-rose-700 text-xs shadow transition-all transform hover:-translate-y-0.5">
-                    📖 俳句をまなぶ！
-                </button>
-            </div>
-
-            <!-- Mode 2: Match Quiz -->
-            <div class="bg-gradient-to-b from-amber-50 to-amber-100 rounded-3xl p-4 border-4 border-amber-300 shadow-md hover:shadow-xl transition-all flex flex-col justify-between">
-                <div class="space-y-2">
-                    <div class="bg-amber-400 text-white w-9 h-9 rounded-xl flex items-center justify-center text-sm shadow-inner font-bold">②</div>
-                    <h3 class="text-base font-bold text-amber-950 leading-tight">
-                        リズム合わせ
-                    </h3>
-                    <p class="text-[11px] text-amber-800 leading-relaxed">
-                        バラバラになった言葉を組み合わせて、正しい「５・７・５」の俳句を完成させよう！
-                    </p>
-                </div>
-                <button onclick="changeTab('match'); initMatchGame();" class="mt-4 w-full bg-amber-500 hover:bg-amber-400 text-white font-black py-2 rounded-xl border-b-4 border-amber-700 text-xs shadow transition-all transform hover:-translate-y-0.5">
-                    🧩 パズルをあわせる！
-                </button>
-            </div>
-
-            <!-- Mode 3: Input Quiz -->
-            <div class="bg-gradient-to-b from-sky-50 to-sky-100 rounded-3xl p-4 border-4 border-sky-300 shadow-md hover:shadow-xl transition-all flex flex-col justify-between">
-                <div class="space-y-2">
-                    <div class="bg-sky-400 text-white w-9 h-9 rounded-xl flex items-center justify-center text-sm shadow-inner font-bold">③</div>
-                    <h3 class="text-base font-bold text-sky-950 leading-tight">
-                        言葉をうめる
-                    </h3>
-                    <p class="text-[11px] text-sky-800 leading-relaxed">
-                        あいているところに、ぴったり「五音（ごおん）」や「七音（しちおん）」になる言葉をえらぼう！
-                    </p>
-                </div>
-                <button onclick="changeTab('input-quiz'); initInputQuiz();" class="mt-4 w-full bg-sky-500 hover:bg-sky-400 text-white font-black py-2 rounded-xl border-b-4 border-sky-700 text-xs shadow transition-all transform hover:-translate-y-0.5">
-                    ✏️ 言葉をうめる！
-                </button>
-            </div>
-
-            <!-- Mode 4: Lyrics Quiz (NEW!) -->
-            <div class="bg-gradient-to-b from-indigo-50 to-indigo-100 rounded-3xl p-4 border-4 border-indigo-300 shadow-md hover:shadow-xl transition-all flex flex-col justify-between">
-                <div class="space-y-2">
-                    <div class="bg-indigo-400 text-white w-9 h-9 rounded-xl flex items-center justify-center text-sm shadow-inner font-bold">④</div>
-                    <h3 class="text-base font-bold text-indigo-950 leading-tight">
-                        歌から探す
-                    </h3>
-                    <p class="text-[11px] text-indigo-800 leading-relaxed">
-                        音楽の教科書や「みんなのうた」の歌詞（かし）から、５音・７音のリズムをみつけよう！
-                    </p>
-                </div>
-                <button onclick="changeTab('lyrics-quiz'); initLyricsQuiz();" class="mt-4 w-full bg-indigo-500 hover:bg-indigo-400 text-white font-black py-2 rounded-xl border-b-4 border-indigo-700 text-xs shadow transition-all transform hover:-translate-y-0.5">
-                    🎶 歌詞からさがす！
-                </button>
-            </div>
-
-            <!-- Mode 5: Creative Maker -->
-            <div class="bg-gradient-to-b from-emerald-50 to-emerald-100 rounded-3xl p-4 border-4 border-emerald-300 shadow-md hover:shadow-xl transition-all flex flex-col justify-between">
-                <div class="space-y-2">
-                    <div class="bg-emerald-400 text-white w-9 h-9 rounded-xl flex items-center justify-center text-sm shadow-inner font-bold">⑤</div>
-                    <h3 class="text-base font-bold text-emerald-950 leading-tight">
-                        じぶんで作る
-                    </h3>
-                    <p class="text-[11px] text-emerald-800 leading-relaxed">
-                        音数カウンターと季語ずかんを使って、じぶんだけの俳句を作ろう。縦書きの美しい短冊になるよ！
-                    </p>
-                </div>
-                <button onclick="changeTab('create'); initCreateMode();" class="mt-4 w-full bg-emerald-500 hover:bg-emerald-400 text-white font-black py-2 rounded-xl border-b-4 border-emerald-700 text-xs shadow transition-all transform hover:-translate-y-0.5">
-                    🎨 俳句をつくる！
-                </button>
-            </div>
-        </div>
-
-        <!-- Quick Rule Guide -->
-        <div class="bg-white rounded-3xl p-6 shadow-md border border-amber-200">
-            <h3 class="text-lg font-bold text-amber-800 border-b border-amber-100 pb-2 mb-4 flex items-center">
-                🏮 俳句（はいく）の３つのかんたんな約束（やくそく）
-            </h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-rose-50/50 p-4 rounded-2xl border border-rose-150">
-                    <span class="text-rose-600 font-black text-lg block mb-1">① リズムは５・７・５</span>
-                    <p class="text-xs text-slate-600 leading-relaxed">
-                        「上の句（5文字）」「中の句（7文字）」「下の句（5文字）」の、ぜんぶで17音にするのがきまりです。
-                    </p>
-                </div>
-                <div class="bg-emerald-50/50 p-4 rounded-2xl border border-emerald-150">
-                    <span class="text-emerald-600 font-black text-lg block mb-1">② 季語（きご）をひとつ入れる</span>
-                    <p class="text-xs text-slate-600 leading-relaxed">
-                        春・夏・秋・冬など、季節をあらわす言葉（さくら、すいか、もみじ、雪など）をひとつだけ入れます。
-                    </p>
-                </div>
-                <div class="bg-sky-50/50 p-4 rounded-2xl border border-sky-150">
-                    <span class="text-sky-600 font-black text-lg block mb-1">③ 拗音（ゃゅょ）はセットで1音</span>
-                    <p class="text-xs text-slate-600 leading-relaxed">
-                        「しゃ」「しゅ」「しょ」などの小さな文字は、前の文字とセットで1つと数えるよ！「っ」や「ん」は1音だよ。
-                    </p>
-                </div>
-            </div>
-        </div>
+<div class="w-full max-w-2xl bg-white rounded-3xl shadow-lg border-4 border-emerald-200 overflow-hidden">
+    <!-- ヘッダー -->
+    <div class="bg-emerald-500 p-4 text-white flex justify-between items-center">
+        <h1 class="text-2xl font-black flex items-center">🎋 はい句づくり</h1>
+        <span id="display-student-name" class="bg-emerald-700 px-3 py-1 rounded-full text-sm font-bold shadow-inner"></span>
     </div>
 
-    <!-- LEARN TAB -->
-    <div id="tab-learn" class="tab-content hidden space-y-6 bounce-in">
-        <div class="bg-white rounded-3xl p-6 shadow-lg border-4 border-rose-300">
-            <div class="flex justify-between items-center border-b pb-4 mb-4">
-                <h2 class="text-xl md:text-2xl font-black text-rose-800 flex items-center">
-                    📖 俳句（はいく）ってなぁに？
-                </h2>
-                <span class="bg-rose-100 text-rose-800 text-xs px-3 py-1 rounded-full font-bold">基本のレッスン</span>
+    <div class="p-6 md:p-10 space-y-8">
+        <div class="text-center space-y-2">
+            <h2 class="text-lg font-bold text-slate-700">五・七・五 で言葉をつないでみよう！</h2>
+            <p class="text-sm text-slate-500">季語（きご：季節の言葉）をひとつ入れると、かっこいいよ。</p>
+        </div>
+
+        <!-- 入力エリア -->
+        <div class="space-y-4">
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-black text-xl shadow-inner">五</div>
+                <input type="text" id="input-1" placeholder="上五 (かみご) をいれる" class="flex-1 bg-slate-50 border-2 border-slate-200 rounded-xl p-3 text-lg focus:border-emerald-500 outline-none transition-all" oninput="updatePreview()">
             </div>
-
-            <!-- Slides Panel -->
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
-                <!-- Slide Cards List (Left) -->
-                <div class="md:col-span-4 flex flex-col space-y-2">
-                    <button id="btn-slide-1" onclick="showSlide(1)" class="w-full text-left p-3 rounded-xl border-2 border-rose-400 bg-rose-50 text-rose-900 font-black text-sm transition-all shadow-sm">
-                        🌸 ① ５・７・５のリズム
-                    </button>
-                    <button id="btn-slide-2" onclick="showSlide(2)" class="w-full text-left p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 font-bold text-sm text-slate-700 transition-all">
-                        🍉 ② 季語（きご）ってなに？
-                    </button>
-                    <button id="btn-slide-3" onclick="showSlide(3)" class="w-full text-left p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 font-bold text-sm text-slate-700 transition-all">
-                        🍁 ③ 音の数え方のひみつ
-                    </button>
-                    <button id="btn-slide-4" onclick="showSlide(4)" class="w-full text-left p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 font-bold text-sm text-slate-700 transition-all">
-                        ⛄ ④ きょうかしょの名作
-                    </button>
-                </div>
-
-                <!-- Slide Content View (Right) -->
-                <div class="md:col-span-8 bg-amber-50/40 rounded-2xl p-5 border border-amber-100 flex flex-col justify-between min-h-[300px]">
-                    <!-- Slide 1 -->
-                    <div id="slide-content-1" class="slide-item space-y-4">
-                        <span class="inline-block bg-rose-100 text-rose-800 text-xs px-2.5 py-1 rounded-full font-black">ご・しち・ご</span>
-                        <h4 class="text-lg font-black text-slate-800">言葉をおんがくのように楽しもう！</h4>
-                        <p class="text-sm text-slate-600 leading-relaxed">
-                            俳句は、日本語のリズム「５・７・５」に言葉をのせて表現します。合計でたったの**17文字（音）**です！
-                        </p>
-                        <div class="bg-white p-3 rounded-xl border border-amber-200 flex justify-center space-x-6 text-center shadow-inner">
-                            <div>
-                                <span class="text-xs text-rose-500 font-black">上の句</span>
-                                <p class="text-xl font-bold bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-200 mt-1">さくら咲く (5)</p>
-                            </div>
-                            <div>
-                                <span class="text-xs text-amber-500 font-black">中の句</span>
-                                <p class="text-xl font-bold bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200 mt-1">青空高く (7)</p>
-                            </div>
-                            <div>
-                                <span class="text-xs text-emerald-500 font-black">下の句</span>
-                                <p class="text-xl font-bold bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 mt-1">うれしいな (5)</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Slide 2 -->
-                    <div id="slide-content-2" class="slide-item hidden space-y-4">
-                        <span class="inline-block bg-emerald-100 text-emerald-800 text-xs px-2.5 py-1 rounded-full font-black">季節をあらわす言葉</span>
-                        <h4 class="text-lg font-black text-slate-800">俳句の中に「きせつ」を閉じ込めよう</h4>
-                        <p class="text-sm text-slate-600 leading-relaxed">
-                            俳句には、その季節を思い浮かべることができる特別な言葉**「季語（きご）」**をひとつ入れる決まりがあります。
-                        </p>
-                        <div class="grid grid-cols-4 gap-2 text-center">
-                            <div class="bg-pink-50 p-2 rounded-xl border border-pink-100">
-                                <span class="text-2xl">🌸</span>
-                                <p class="text-xs font-bold text-pink-700 mt-1">春：さくら</p>
-                            </div>
-                            <div class="bg-sky-50 p-2 rounded-xl border border-sky-100">
-                                <span class="text-2xl">🍉</span>
-                                <p class="text-xs font-bold text-sky-700 mt-1">夏：すいか</p>
-                            </div>
-                            <div class="bg-amber-50 p-2 rounded-xl border border-amber-100">
-                                <span class="text-2xl">🍁</span>
-                                <p class="text-xs font-bold text-amber-700 mt-1">秋：もみじ</p>
-                            </div>
-                            <div class="bg-slate-100 p-2 rounded-xl border border-slate-200">
-                                <span class="text-2xl">⛄</span>
-                                <p class="text-xs font-bold text-slate-700 mt-1">冬：雪（ゆき）</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Slide 3 -->
-                    <div id="slide-content-3" class="slide-item hidden space-y-4">
-                        <span class="inline-block bg-sky-100 text-sky-800 text-xs px-2.5 py-1 rounded-full font-black">おとの数え方</span>
-                        <h4 class="text-lg font-black text-slate-800">「しゃしん」はなん音かな？</h4>
-                        <p class="text-sm text-slate-600 leading-relaxed">
-                            国語の授業でまなぶ「音（おと＝拍数）」の数え方のきまりです：
-                        </p>
-                        <ul class="text-xs text-slate-600 space-y-1 bg-white p-3 rounded-xl border border-slate-100">
-                            <li>✨ <strong class="text-rose-500">ゃ、ゅ、ょ</strong> は、前の文字とセットで1音（例：「じょ・し」は2音）</li>
-                            <li>✨ <strong class="text-sky-500">っ（つまる音）、ん（はねる音）</strong> は、1文字で1音（例：「が・っ・こ・う」は4音）</li>
-                            <li>✨ <strong class="text-emerald-500">ー（のばす音）</strong> も1音（例：「カ・ー・ド」は3音）</li>
-                        </ul>
-                    </div>
-
-                    <!-- Slide 4 -->
-                    <div id="slide-content-4" class="slide-item hidden space-y-4">
-                        <span class="inline-block bg-yellow-100 text-yellow-800 text-xs px-2.5 py-1 rounded-full font-black">教科書の有名な俳句</span>
-                        <h4 class="text-lg font-black text-slate-800">3年生の教科書にのっている名作</h4>
-                        <div class="space-y-2 max-h-[160px] overflow-y-auto pr-1">
-                            <div class="bg-white p-2 rounded-xl border border-amber-200 text-xs">
-                                <p class="font-bold text-amber-800">「菜の花や　月は東に　日は西に」 <span class="text-slate-400 font-bold">（与謝蕪村）</span></p>
-                                <p class="text-slate-500 mt-0.5">菜の花ばたけの向こうに、月と太陽が同時に見えている夕方の美しいけしきだよ。</p>
-                            </div>
-                            <div class="bg-white p-2 rounded-xl border border-amber-200 text-xs">
-                                <p class="font-bold text-amber-800">「やせ蛙　負けるな一茶　これにあり」 <span class="text-slate-400 font-bold">（小林一茶）</span></p>
-                                <p class="text-slate-500 mt-0.5">小さなカエル同士がすもうをしているのを見て、一茶が「がんばれ！」と応援しているんだよ。</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Visual Indicator Bottom -->
-                    <div class="mt-4 pt-3 border-t border-amber-150 flex items-center justify-between text-xs text-slate-500 font-bold">
-                        <span>💡 「リズム」を意識して、声に出して読んでみよう！</span>
-                        <button onclick="playSimpleSound(659.25, 0.2)" class="bg-white hover:bg-slate-100 p-1 rounded border">🔊 おとを聞く</button>
-                    </div>
-                </div>
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-black text-xl shadow-inner">七</div>
+                <input type="text" id="input-2" placeholder="中七 (なかしち) をいれる" class="flex-1 bg-slate-50 border-2 border-slate-200 rounded-xl p-3 text-lg focus:border-emerald-500 outline-none transition-all" oninput="updatePreview()">
             </div>
-
-            <div class="mt-8 flex justify-between items-center">
-                <button onclick="changeTab('home')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 px-6 rounded-xl border text-sm">
-                    戻る
-                </button>
-                <button onclick="changeTab('match'); initMatchGame();" class="bg-amber-500 hover:bg-amber-400 text-white font-black py-2.5 px-6 rounded-xl border-b-4 border-amber-700 text-sm shadow transition-all transform hover:-translate-y-0.5">
-                    次は「パズルゲーム」にちょうせん！ 👉
-                </button>
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center font-black text-xl shadow-inner">五</div>
+                <input type="text" id="input-3" placeholder="下五 (しもご) をいれる" class="flex-1 bg-slate-50 border-2 border-slate-200 rounded-xl p-3 text-lg focus:border-emerald-500 outline-none transition-all" oninput="updatePreview()">
             </div>
         </div>
-    </div>
 
-    <!-- MATCH GAME TAB -->
-    <div id="tab-match" class="tab-content hidden space-y-6 bounce-in">
-        <div class="bg-white rounded-3xl p-6 shadow-lg border-4 border-amber-300">
-            <div class="flex flex-col md:flex-row justify-between items-center border-b pb-4 mb-4 gap-2">
-                <div>
-                    <h2 class="text-xl md:text-2xl font-black text-amber-800 flex items-center">
-                        🧩 ５・７・５のリズムを合わせよう！
-                    </h2>
-                    <p class="text-xs text-slate-500 font-bold">バラバラのカードを正しく組み合わせて、俳句をかんせいさせてね！</p>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <span class="bg-rose-100 text-rose-800 text-sm px-3 py-1 rounded-full font-black">
-                        スコア: <span id="match-score">0</span> 点
-                    </span>
-                    <span class="bg-amber-100 text-amber-800 text-sm px-3 py-1 rounded-full font-black">
-                        もんめい: <span id="match-round">1</span> / 3
-                    </span>
-                </div>
-            </div>
-
-            <!-- Gameboard -->
-            <div class="bg-amber-50/40 rounded-2xl p-4 border border-amber-200 min-h-[300px] flex flex-col justify-between relative">
-                
-                <!-- Feedback overlay -->
-                <div id="match-feedback" class="absolute inset-0 bg-white/95 z-20 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-all duration-300 rounded-2xl">
-                    <span id="match-feedback-emoji" class="text-7xl">⭕</span>
-                    <p id="match-feedback-text" class="text-xl font-bold mt-2 text-green-600">せいかい！</p>
-                    <p id="match-feedback-desc" class="text-sm text-slate-500 mt-1 max-w-md text-center px-4"></p>
-                </div>
-
-                <!-- Clue Situation Card -->
-                <div class="bg-white p-3 rounded-xl border border-amber-100 shadow-sm flex items-center space-x-3">
-                    <span id="match-clue-emoji" class="text-4xl p-2 bg-amber-50 rounded-xl">🐸</span>
-                    <div>
-                        <span class="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded-full font-black">ヒントのえほん</span>
-                        <p id="match-clue-text" class="text-sm font-bold text-slate-700 mt-1">池にカエルが飛びこんで、水の音がひびいたよ！</p>
-                    </div>
-                </div>
-
-                <!-- Selected slots (Where cards are placed) -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
-                    <div id="slot-5-1" onclick="recallCard('5-1')" class="border-2 border-dashed border-rose-300 bg-rose-50/30 rounded-xl p-4 min-h-[70px] flex flex-col items-center justify-center cursor-pointer hover:bg-rose-50/50 transition-all">
-                        <span class="text-xs text-rose-400 font-bold">① 上の句（５音）</span>
-                        <p id="slot-5-1-text" class="text-lg font-black text-slate-800 mt-1"></p>
-                    </div>
-                    <div id="slot-7-1" onclick="recallCard('7-1')" class="border-2 border-dashed border-amber-300 bg-amber-50/30 rounded-xl p-4 min-h-[70px] flex flex-col items-center justify-center cursor-pointer hover:bg-amber-50/50 transition-all">
-                        <span class="text-xs text-amber-400 font-bold">② 中の句（７音）</span>
-                        <p id="slot-7-1-text" class="text-lg font-black text-slate-800 mt-1"></p>
-                    </div>
-                    <div id="slot-5-2" onclick="recallCard('5-2')" class="border-2 border-dashed border-emerald-300 bg-emerald-50/30 rounded-xl p-4 min-h-[70px] flex flex-col items-center justify-center cursor-pointer hover:bg-emerald-50/50 transition-all">
-                        <span class="text-xs text-emerald-400 font-bold">③ 下の句（５音）</span>
-                        <p id="slot-5-2-text" class="text-lg font-black text-slate-800 mt-1"></p>
-                    </div>
-                </div>
-
-                <!-- Deck cards block (Choice items) -->
-                <div class="space-y-2">
-                    <p class="text-center text-xs font-bold text-slate-500">👇 カードをタッチして、上の正しい場所にセットしてね！</p>
-                    <div id="deck-container" class="flex flex-wrap justify-center gap-2">
-                        <!-- Dynamic card buttons will load here -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Finish screen for Match Game -->
-            <div id="match-finish-panel" class="hidden bg-slate-50 rounded-2xl p-6 border border-slate-200 text-center space-y-4">
-                <span class="text-5xl">🏮</span>
-                <h3 class="text-2xl font-bold text-slate-800">よくがんばりました！</h3>
-                <p class="text-sm text-slate-600">
-                    あなたのスコアは <span id="final-match-score" class="text-2xl font-black text-amber-600">0</span> 点でした！
-                </p>
-                <div class="flex justify-center space-x-3">
-                    <button onclick="initMatchGame()" class="bg-amber-500 hover:bg-amber-400 text-white font-bold py-2.5 px-6 rounded-xl shadow border-b-4 border-amber-700 text-sm">
-                        もう一回パズルをやる
-                    </button>
-                    <button onclick="changeTab('input-quiz'); initInputQuiz();" class="bg-sky-500 hover:bg-sky-400 text-white font-bold py-2.5 px-6 rounded-xl shadow border-b-4 border-sky-700 text-sm">
-                        次は穴埋めクイズへ！ 👉
-                    </button>
-                </div>
-            </div>
-
-            <div class="mt-6 flex justify-between items-center">
-                <button onclick="changeTab('home')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 px-6 rounded-xl border text-sm">
-                    戻る
-                </button>
-                <button onclick="initMatchGame()" class="text-amber-600 hover:text-amber-800 font-bold text-sm">
-                    🔄 はじめからやり直す
-                </button>
+        <!-- プレビュー短冊 -->
+        <div class="flex justify-center py-6">
+            <div class="relative bg-[url('https://www.transparenttextures.com/patterns/rice-paper-2.png')] bg-[#fdfaf3] border border-[#e5e0d8] shadow-md px-10 py-16 flex space-x-6 writing-vertical text-2xl md:text-3xl font-serif text-slate-800 min-h-[300px]">
+                <div id="preview-1" class="min-h-[5em]"></div>
+                <div id="preview-2" class="min-h-[7em] mt-8"></div>
+                <div id="preview-3" class="min-h-[5em] mt-16"></div>
+                <!-- 署名 -->
+                <div id="preview-name" class="text-base text-slate-500 mt-20"></div>
             </div>
         </div>
+
+        <!-- 送信ボタン -->
+        <button onclick="submitHaiku()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-black py-4 rounded-2xl border-b-4 border-emerald-700 shadow-lg text-lg transform transition active:scale-95 flex items-center justify-center space-x-2">
+            <span>先生に作品を送る</span>
+            <span>🚀</span>
+        </button>
     </div>
-
-    <!-- INPUT QUIZ TAB -->
-    <div id="tab-input-quiz" class="tab-content hidden space-y-6 bounce-in">
-        <div class="bg-white rounded-3xl p-6 shadow-lg border-4 border-sky-300">
-            <div class="flex justify-between items-center border-b pb-4 mb-4">
-                <div>
-                    <h2 class="text-xl md:text-2xl font-black text-sky-800">
-                        ✏️ 言葉をあてはめよう！穴埋めクイズ
-                    </h2>
-                    <p class="text-xs text-slate-500 font-bold">俳句の一部分をうめて、リズムがぴったりな俳句を作ろう！</p>
-                </div>
-                <div class="text-right">
-                    <span id="iq-current-num" class="text-sm font-black text-sky-700">1 / 3 問</span>
-                </div>
-            </div>
-
-            <div class="w-full bg-slate-100 rounded-full h-3 mb-6 overflow-hidden">
-                <div id="iq-progress" class="bg-sky-500 h-3 rounded-full transition-all duration-300" style="width: 33.3%;"></div>
-            </div>
-
-            <!-- Quiz Main Section -->
-            <div class="bg-sky-50/40 rounded-2xl p-4 border border-sky-200 space-y-6 min-h-[300px] flex flex-col justify-between relative">
-                
-                <!-- Feedback overlay inside quiz -->
-                <div id="iq-feedback-panel" class="hidden absolute inset-0 bg-white/95 z-30 flex flex-col items-center justify-center p-4 rounded-2xl text-center">
-                    <span id="iq-fb-icon" class="text-6xl">⭕</span>
-                    <h3 id="iq-fb-title" class="text-2xl font-black text-slate-800 mt-2">大せいかい！</h3>
-                    <p id="iq-fb-explanation" class="text-sm text-slate-600 max-w-md leading-relaxed bg-sky-50 p-3 rounded-xl border border-sky-100 mt-2">
-                        解説が入ります。
-                    </p>
-                    <button onclick="nextIqQuestion()" class="mt-4 bg-sky-500 hover:bg-sky-400 text-white font-black py-2.5 px-6 rounded-xl border-b-4 border-sky-700 shadow">
-                        つぎの問題へ 👉
-                    </button>
-                </div>
-
-                <!-- Question Prompt -->
-                <div class="bg-white p-4 rounded-xl border border-sky-100 shadow-sm flex items-center space-x-3">
-                    <span id="iq-emoji" class="text-5xl p-2 bg-sky-50 rounded-xl">⛅</span>
-                    <div>
-                        <span class="bg-sky-100 text-sky-800 text-[10px] px-2.5 py-0.5 rounded-full font-bold">シチュエーション</span>
-                        <p id="iq-situation" class="text-sm text-slate-600 mt-1">状況説明が入ります。</p>
-                    </div>
-                </div>
-
-                <!-- Haiku layout display with Blank slot -->
-                <div class="flex flex-col items-center space-y-2 py-4">
-                    <p class="text-xs text-slate-400 font-bold">俳句（はいく）のすきまをうめよう</p>
-                    <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
-                        <span id="iq-haiku-part-1" class="text-xl font-bold bg-white px-4 py-2 rounded-xl border border-slate-200">菜の花や</span>
-                        <span id="iq-haiku-part-2" class="text-xl font-bold bg-white px-4 py-2 rounded-xl border border-slate-200">月は東に</span>
-                        <span id="iq-haiku-part-3" class="text-xl font-bold bg-white px-4 py-2 rounded-xl border border-slate-200">日は西に</span>
-                    </div>
-                </div>
-
-                <!-- Input controller or Word options -->
-                <div class="space-y-3">
-                    <div id="iq-choices-container" class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <!-- Dynamic choices will load here -->
-                    </div>
-
-                    <!-- Direct Text Input Area -->
-                    <div id="iq-custom-input-box" class="bg-white p-4 rounded-xl border border-sky-200 space-y-3">
-                        <label class="block text-xs font-bold text-sky-800">
-                            ✍️ じぶんで、あてはまる「５音」または「７音」の言葉をタイピングして入れてみよう！
-                        </label>
-                        <div class="flex space-x-2">
-                            <input type="text" id="iq-text-input" placeholder="ここに入力してね（例：ゆきがふる）" class="flex-grow border-2 border-sky-200 focus:border-sky-400 focus:outline-none p-2 rounded-xl font-bold text-slate-700">
-                            <!-- Real-time Count indicator -->
-                            <div class="bg-sky-50 px-3 py-2 rounded-xl border border-sky-200 text-center min-w-[65px]">
-                                <span id="iq-live-count" class="text-lg font-black text-sky-600">0</span>
-                                <span class="text-[10px] text-slate-400 block font-bold">音（拍）</span>
-                            </div>
-                        </div>
-                        <p id="iq-syllable-help" class="text-[11px] text-slate-400 font-bold">※拗音（ょ等）はカウントから除外されます。っ・んは1音と数えます。</p>
-                        <button onclick="submitCustomIqAnswer()" class="w-full bg-sky-500 hover:bg-sky-400 text-white font-bold py-2 rounded-xl border-b-4 border-sky-700 text-sm shadow transition-all">
-                            これで決定（けってい）する！
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quiz Result End Screen -->
-            <div id="iq-result-panel" class="hidden bg-gradient-to-b from-sky-50 to-indigo-50 rounded-3xl p-6 border-4 border-sky-300 text-center space-y-6">
-                <div>
-                    <h3 class="text-2xl font-black text-slate-800">穴埋めクイズをすべてクリア！</h3>
-                    <p class="text-sm text-slate-500">おつかれさまでした。あなたの得点は…</p>
-                </div>
-
-                <!-- Score Board Badge -->
-                <div class="inline-block relative">
-                    <div class="w-32 h-32 bg-white rounded-full border-4 border-sky-300 flex items-center justify-center shadow-lg">
-                        <div>
-                            <span id="iq-final-score" class="text-4xl font-black text-rose-500">3</span>
-                            <span class="text-xs text-slate-400 font-bold">/ 3問</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Master Certification Card -->
-                <div class="bg-white border-8 border-sky-100 rounded-2xl p-6 shadow-md max-w-lg mx-auto relative overflow-hidden">
-                    <div class="absolute -top-4 -right-12 bg-sky-500 text-white font-bold text-xs py-2 w-36 rotate-45 shadow">
-                        合格おめでとう！
-                    </div>
-                    <h4 class="text-2xl font-black text-sky-700 mb-2">俳句リズムマスター認定証</h4>
-                    <p class="text-xs text-slate-400 mb-6">小学校３年 国語・こくご科</p>
-                    <p class="text-sm font-bold text-slate-700 leading-relaxed mb-6">
-                        あなた、日本語の「５音・７音」のリズムを完璧にマスターし、<br>
-                        美しい俳句を創りだすチカラがあることを証明します！
-                    </p>
-                    <div class="flex justify-between items-end border-t border-dashed border-sky-100 pt-4">
-                        <span class="text-xs text-slate-400 font-bold">俳句を楽しもう研究クラブ より</span>
-                        <div class="w-16 h-16 border-2 border-sky-500 rounded-full flex items-center justify-center relative rotate-12">
-                            <span class="text-sky-500 font-black text-[10px] text-center leading-none">合格<br>おめでとう</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex justify-center space-x-3">
-                    <button onclick="startInputQuiz()" class="bg-sky-500 hover:bg-sky-400 text-white font-bold py-2.5 px-6 rounded-xl shadow border-b-4 border-sky-700 text-sm">
-                        もう一度挑戦する
-                    </button>
-                    <button onclick="changeTab('lyrics-quiz'); initLyricsQuiz();" class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold py-2.5 px-6 rounded-xl shadow border-b-4 border-indigo-700 text-sm">
-                        次は歌から探そう！ 👉
-                    </button>
-                </div>
-            </div>
-
-            <div class="mt-6 flex justify-between items-center">
-                <button onclick="changeTab('home')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 px-6 rounded-xl border text-sm">
-                    戻る
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- LYRICS QUIZ TAB -->
-    <div id="tab-lyrics-quiz" class="tab-content hidden space-y-6 bounce-in">
-        <div class="bg-white rounded-3xl p-6 shadow-lg border-4 border-indigo-300">
-            <div class="flex justify-between items-center border-b pb-4 mb-4">
-                <div>
-                    <h2 class="text-xl md:text-2xl font-black text-indigo-800 flex items-center">
-                        🎶 歌からリズムをさがそう！
-                    </h2>
-                    <p class="text-xs text-slate-500 font-bold">教科書や「みんなのうた」の歌詞から、５音や７音の部分をあててね！</p>
-                </div>
-                <div class="text-right">
-                    <span id="lq-current-num" class="text-sm font-black text-indigo-700">1 / 5 問</span>
-                </div>
-            </div>
-
-            <div class="w-full bg-slate-100 rounded-full h-3 mb-6 overflow-hidden">
-                <div id="lq-progress" class="bg-indigo-500 h-3 rounded-full transition-all duration-300" style="width: 20%;"></div>
-            </div>
-
-            <!-- Quiz Core Screen -->
-            <div class="bg-indigo-50/40 rounded-2xl p-4 border border-indigo-200 space-y-6 min-h-[300px] flex flex-col justify-between relative">
-                
-                <!-- Feedback overlay inside lyrics quiz -->
-                <div id="lq-feedback-panel" class="hidden absolute inset-0 bg-white/95 z-30 flex flex-col items-center justify-center p-4 rounded-2xl text-center">
-                    <span id="lq-fb-icon" class="text-6xl">⭕</span>
-                    <h3 id="lq-fb-title" class="text-2xl font-black text-slate-800 mt-2">大せいかい！</h3>
-                    <p id="lq-fb-explanation" class="text-sm text-slate-600 max-w-md leading-relaxed bg-indigo-50 p-3 rounded-xl border border-indigo-100 mt-2">
-                        解説が入ります。
-                    </p>
-                    <button onclick="nextLqQuestion()" class="mt-4 bg-indigo-500 hover:bg-indigo-400 text-white font-black py-2.5 px-6 rounded-xl border-b-4 border-indigo-700 shadow">
-                        つぎの問題へ 👉
-                    </button>
-                </div>
-
-                <!-- Song Info Panel -->
-                <div class="bg-white p-4 rounded-xl border border-indigo-100 shadow-sm flex items-center space-x-3">
-                    <span id="lq-emoji" class="text-5xl p-2 bg-indigo-50 rounded-xl">🎏</span>
-                    <div>
-                        <span id="lq-song-title" class="bg-indigo-100 text-indigo-800 text-xs px-2.5 py-0.5 rounded-full font-black">うたのなまえ</span>
-                        <p id="lq-target-instruction" class="text-base font-black text-slate-800 mt-1.5">この歌の中から「〇音（〇拍）」になっているフレーズをえらんでね！</p>
-                    </div>
-                </div>
-
-                <!-- Lyrics Guide Visualizer -->
-                <div class="bg-indigo-900 text-indigo-100 p-4 rounded-2xl text-center shadow-inner relative overflow-hidden">
-                    <div class="absolute top-2 left-2 text-indigo-400 text-xs">🎵 歌詞（かし）のヒント</div>
-                    <p id="lq-lyrics-hint" class="text-lg font-bold tracking-wide py-3 leading-relaxed">
-                        やねよりたかい　こいのぼり〜♪
-                    </p>
-                </div>
-
-                <!-- Choices -->
-                <div class="space-y-3">
-                    <p class="text-xs text-center text-slate-500 font-bold">👇 正解（せいかい）だと思うボタンをえらんでね！</p>
-                    <div id="lq-choices-container" class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <!-- Choices will load dynamically -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quiz End Certificate -->
-            <div id="lq-result-panel" class="hidden bg-gradient-to-b from-indigo-50 to-purple-50 rounded-3xl p-6 border-4 border-indigo-300 text-center space-y-6">
-                <div>
-                    <h3 class="text-2xl font-black text-slate-800">歌詞リズムクイズをクリア！</h3>
-                    <p class="text-sm text-slate-500">おつかれさまでした。あなたの得点は…</p>
-                </div>
-
-                <!-- Score Board Badge -->
-                <div class="inline-block relative">
-                    <div class="w-32 h-32 bg-white rounded-full border-4 border-indigo-300 flex items-center justify-center shadow-lg">
-                        <div>
-                            <span id="lq-final-score" class="text-4xl font-black text-indigo-600">5</span>
-                            <span class="text-xs text-slate-400 font-bold">/ 5問</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Certification Card -->
-                <div class="bg-white border-8 border-indigo-100 rounded-2xl p-6 shadow-md max-w-lg mx-auto relative overflow-hidden">
-                    <div class="absolute -top-4 -right-12 bg-indigo-500 text-white font-bold text-xs py-2 w-36 rotate-45 shadow">
-                        合格おめでとう！
-                    </div>
-                    <h4 class="text-2xl font-black text-indigo-700 mb-2">歌詞リズムマスター認定証</h4>
-                    <p class="text-xs text-slate-400 mb-6">小学校３年 国語・音楽コラボレーション</p>
-                    <p class="text-sm font-bold text-slate-700 leading-relaxed mb-6">
-                        あなたは、おなじみの歌の歌詞をとおして、<br>
-                        美しい「五音」と「七音」のリズム感を完璧に聞きわけ、<br>
-                        言葉のもつメロディをマスターしたことを証明します！
-                    </p>
-                    <div class="flex justify-between items-end border-t border-dashed border-indigo-100 pt-4">
-                        <span class="text-xs text-slate-400 font-bold">リズムとことばの音楽研究会 より</span>
-                        <div class="w-16 h-16 border-2 border-indigo-500 rounded-full flex items-center justify-center relative rotate-12">
-                            <span class="text-indigo-500 font-black text-[10px] text-center leading-none">音感<br>合格</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex justify-center space-x-3">
-                    <button onclick="initLyricsQuiz()" class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold py-2.5 px-6 rounded-xl shadow border-b-4 border-indigo-700 text-sm">
-                        もう一度挑戦する
-                    </button>
-                    <button onclick="changeTab('create'); initCreateMode();" class="bg-emerald-500 hover:bg-emerald-400 text-white font-bold py-2.5 px-6 rounded-xl shadow border-b-4 border-emerald-700 text-sm">
-                        じぶんの俳句をつくる！ 👉
-                    </button>
-                </div>
-            </div>
-
-            <div class="mt-6 flex justify-between items-center">
-                <button onclick="changeTab('home')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 px-6 rounded-xl border text-sm">
-                    戻る
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- CREATE MODE TAB -->
-    <div id="tab-create" class="tab-content hidden space-y-6 bounce-in">
-        <div class="bg-white rounded-3xl p-6 shadow-lg border-4 border-emerald-300">
-            <div class="flex justify-between items-center border-b pb-4 mb-4">
-                <div>
-                    <h2 class="text-xl md:text-2xl font-black text-emerald-800 flex items-center">
-                        🎨 じぶんだけの俳句を作ろう！
-                    </h2>
-                    <p class="text-xs text-slate-500 font-bold">音数をカウントする機能と季語のヒントを使って、美しい「縦書き」の短冊を作ろう！</p>
-                </div>
-                <span class="bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full font-bold">短冊メーカー</span>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                
-                <!-- Left Input side (7 cols) -->
-                <div class="lg:col-span-7 space-y-4">
-                    
-                    <!-- Sound count drum visualization -->
-                    <div class="bg-emerald-50/50 p-4 rounded-2xl border border-emerald-100 space-y-3">
-                        <span class="bg-emerald-200 text-emerald-900 text-[10px] px-2.5 py-1 rounded-full font-bold">🥁 リズムに合わせて言葉をいれよう（入力はよこ書きでOK！）</span>
-                        
-                        <!-- Inputs Grid -->
-                        <div class="space-y-3 mt-2">
-                            <!-- Part 1 -->
-                            <div>
-                                <div class="flex justify-between items-center mb-1">
-                                    <label class="text-xs font-bold text-slate-700">① 上の句（５音）</label>
-                                    <span id="badge-part-1" class="text-xs font-black px-2 py-0.5 rounded-full bg-slate-200 text-slate-700">0 / 5音</span>
-                                </div>
-                                <input type="text" id="create-part-1" oninput="updateHaikuCounter(1)" placeholder="例：さくらさく（5音）" class="w-full border-2 border-emerald-100 focus:border-emerald-400 focus:outline-none p-2 rounded-xl font-bold text-slate-700 text-sm">
-                            </div>
-                            <!-- Part 2 -->
-                            <div>
-                                <div class="flex justify-between items-center mb-1">
-                                    <label class="text-xs font-bold text-slate-700">② 中の句（７音）</label>
-                                    <span id="badge-part-2" class="text-xs font-black px-2 py-0.5 rounded-full bg-slate-200 text-slate-700">0 / 7音</span>
-                                </div>
-                                <input type="text" id="create-part-2" oninput="updateHaikuCounter(2)" placeholder="例：あおぞらたかく（7音）" class="w-full border-2 border-emerald-100 focus:border-emerald-400 focus:outline-none p-2 rounded-xl font-bold text-slate-700 text-sm">
-                            </div>
-                            <!-- Part 3 -->
-                            <div>
-                                <div class="flex justify-between items-center mb-1">
-                                    <label class="text-xs font-bold text-slate-700">③ 下の句（５音）</label>
-                                    <span id="badge-part-3" class="text-xs font-black px-2 py-0.5 rounded-full bg-slate-200 text-slate-700">0 / 5音</span>
-                                </div>
-                                <input type="text" id="create-part-3" oninput="updateHaikuCounter(3)" placeholder="例：うれしいな（5音）" class="w-full border-2 border-emerald-100 focus:border-emerald-400 focus:outline-none p-2 rounded-xl font-bold text-slate-700 text-sm">
-                            </div>
-                            <!-- Author -->
-                            <div>
-                                <label class="block text-xs font-bold text-slate-700 mb-1">🙋‍♀️ なまえ（作者名）</label>
-                                <input type="text" id="create-author" placeholder="なまえ（例：りゅうた）" class="w-full border-2 border-emerald-100 focus:border-emerald-400 focus:outline-none p-2 rounded-xl font-bold text-slate-700 text-sm">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 🌸 SEASONAL KIGO DICTIONARY (Interactive) -->
-                    <div class="bg-amber-50/50 p-4 rounded-2xl border border-amber-200 space-y-3">
-                        <div class="flex justify-between items-center">
-                            <span class="bg-amber-200 text-amber-900 text-[10px] px-2.5 py-1 rounded-full font-bold">🌸 きせつの季語（きご）ずかん</span>
-                            <span class="text-[10px] text-amber-800 font-bold">タップで俳句に挿入（そうにゅう）できるよ！</span>
-                        </div>
-                        
-                        <!-- Season switcher inside dictionary -->
-                        <div class="grid grid-cols-4 gap-1 text-center text-xs">
-                            <button onclick="toggleKigoTab('spring')" id="kigo-tab-spring" class="bg-pink-400 text-white font-black py-1 px-1 rounded-lg">春</button>
-                            <button onclick="toggleKigoTab('summer')" id="kigo-tab-summer" class="bg-slate-200 text-slate-700 font-bold py-1 px-1 rounded-lg hover:bg-slate-300">夏</button>
-                            <button onclick="toggleKigoTab('autumn')" id="kigo-tab-autumn" class="bg-slate-200 text-slate-700 font-bold py-1 px-1 rounded-lg hover:bg-slate-300">秋</button>
-                            <button onclick="toggleKigoTab('winter')" id="kigo-tab-winter" class="bg-slate-200 text-slate-700 font-bold py-1 px-1 rounded-lg hover:bg-slate-300">冬</button>
-                        </div>
-
-                        <!-- Spring items -->
-                        <div id="kigo-box-spring" class="kigo-container-box flex flex-wrap gap-1.5 pt-2">
-                            <button onclick="insertKigo('さくら')" class="bg-white hover:bg-pink-50 border border-pink-200 px-2 py-1 rounded-lg text-xs font-bold text-pink-700">🌸 さくら</button>
-                            <button onclick="insertKigo('なのはな')" class="bg-white hover:bg-yellow-50 border border-yellow-200 px-2 py-1 rounded-lg text-xs font-bold text-yellow-700">🌼 なのはな</button>
-                            <button onclick="insertKigo('ひばり')" class="bg-white hover:bg-amber-50 border border-amber-200 px-2 py-1 rounded-lg text-xs font-bold text-amber-700">🐦 ひばり</button>
-                            <button onclick="insertKigo('つくし')" class="bg-white hover:bg-emerald-50 border border-emerald-200 px-2 py-1 rounded-lg text-xs font-bold text-emerald-700">🌱 つくし</button>
-                            <button onclick="insertKigo('うぐいす')" class="bg-white hover:bg-green-50 border border-green-200 px-2 py-1 rounded-lg text-xs font-bold text-green-700">🐤 うぐいす</button>
-                        </div>
-                        <!-- Summer items -->
-                        <div id="kigo-box-summer" class="kigo-container-box hidden flex flex-wrap gap-1.5 pt-2">
-                            <button onclick="insertKigo('ひまわり')" class="bg-white hover:bg-yellow-50 border border-yellow-200 px-2 py-1 rounded-lg text-xs font-bold text-yellow-700">🌻 ひまわり</button>
-                            <button onclick="insertKigo('すいか')" class="bg-white hover:bg-red-50 border border-red-200 px-2 py-1 rounded-lg text-xs font-bold text-red-700">🍉 すいか</button>
-                            <button onclick="insertKigo('せみ')" class="bg-white hover:bg-orange-50 border border-orange-200 px-2 py-1 rounded-lg text-xs font-bold text-orange-700">🦗 せみ</button>
-                            <button onclick="insertKigo('かきごおり')" class="bg-white hover:bg-sky-50 border border-sky-200 px-2 py-1 rounded-lg text-xs font-bold text-sky-700">🍧 かきごおり</button>
-                            <button onclick="insertKigo('あさがお')" class="bg-white hover:bg-purple-50 border border-purple-200 px-2 py-1 rounded-lg text-xs font-bold text-purple-700">🌺 あさがお</button>
-                        </div>
-                        <!-- Autumn items -->
-                        <div id="kigo-box-autumn" class="kigo-container-box hidden flex flex-wrap gap-1.5 pt-2">
-                            <button onclick="insertKigo('もみじ')" class="bg-white hover:bg-red-50 border border-red-200 px-2 py-1 rounded-lg text-xs font-bold text-red-700">🍁 もみじ</button>
-                            <button onclick="insertKigo('くり')" class="bg-white hover:bg-amber-50 border border-amber-200 px-2 py-1 rounded-lg text-xs font-bold text-amber-700">🌰 くり</button>
-                            <button onclick="insertKigo('とんぼ')" class="bg-white hover:bg-orange-50 border border-orange-200 px-2 py-1 rounded-lg text-xs font-bold text-orange-700">🌾 とんぼ</button>
-                            <button onclick="insertKigo('おつきさま')" class="bg-white hover:bg-yellow-50 border border-yellow-200 px-2 py-1 rounded-lg text-xs font-bold text-yellow-700">🌕 おつきさま</button>
-                            <button onclick="insertKigo('なし')" class="bg-white hover:bg-green-50 border border-green-200 px-2 py-1 rounded-lg text-xs font-bold text-green-700">🍐 なし</button>
-                        </div>
-                        <!-- Winter items -->
-                        <div id="kigo-box-winter" class="kigo-container-box hidden flex flex-wrap gap-1.5 pt-2">
-                            <button onclick="insertKigo('ゆき')" class="bg-white hover:bg-slate-100 border border-slate-300 px-2 py-1 rounded-lg text-xs font-bold text-slate-700">⛄ ゆき</button>
-                            <button onclick="insertKigo('みかん')" class="bg-white hover:bg-orange-50 border border-orange-200 px-2 py-1 rounded-lg text-xs font-bold text-orange-700">🍊 みかん</button>
-                            <button onclick="insertKigo('つらら')" class="bg-white hover:bg-sky-50 border border-sky-200 px-2 py-1 rounded-lg text-xs font-bold text-sky-700">❄️ つらら</button>
-                            <button onclick="insertKigo('こたつ')" class="bg-white hover:bg-red-50 border border-red-200 px-2 py-1 rounded-lg text-xs font-bold text-red-700">🔥 こたつ</button>
-                            <button onclick="insertKigo('ストーブ')" class="bg-white hover:bg-slate-100 border border-slate-300 px-2 py-1 rounded-lg text-xs font-bold text-slate-600">🔌 ストーブ</button>
-                        </div>
-                    </div>
-
-                    <!-- Card Style settings -->
-                    <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
-                        <label class="block text-xs font-bold text-slate-700">🎨 短冊（たんざく）の色をかえてみよう！</label>
-                        <div class="grid grid-cols-4 gap-2">
-                            <button onclick="changeTanzakuTheme('sakura')" class="bg-pink-100 hover:bg-pink-200 border-2 border-pink-400 p-2 rounded-xl text-xs font-black text-pink-800 shadow-sm">さくら色</button>
-                            <button onclick="changeTanzakuTheme('leaf')" class="bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 p-2 rounded-xl text-xs font-bold text-emerald-800">若草（わかくさ）色</button>
-                            <button onclick="changeTanzakuTheme('sky')" class="bg-sky-100 hover:bg-sky-200 border border-sky-300 p-2 rounded-xl text-xs font-bold text-sky-800">青空（あおぞら）色</button>
-                            <button onclick="changeTanzakuTheme('autumn')" class="bg-amber-100 hover:bg-amber-200 border border-amber-300 p-2 rounded-xl text-xs font-bold text-amber-800">紅葉（もみじ）色</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Preview side (5 cols) -->
-                <div class="lg:col-span-5 space-y-4">
-                    <p class="text-xs font-bold text-slate-400 text-center">👇 美しい「たて書き」で表示されているよ！</p>
-                    
-                    <!-- PRINT AREA (The Tanzaku card) -->
-                    <div id="print-area" class="w-full max-w-[280px] mx-auto bg-pink-50 border-8 border-pink-100 rounded-3xl p-6 shadow-xl waving-card min-h-[420px] flex flex-col justify-between text-center relative overflow-hidden transition-all duration-300">
-                        
-                        <!-- Japanese elegant cloud motif (SVG pattern) -->
-                        <div class="absolute inset-0 opacity-10 pointer-events-none">
-                            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="40" cy="50" r="30" fill="#F43F5E"/>
-                                <circle cx="240" cy="380" r="45" fill="#F43F5E"/>
-                            </svg>
-                        </div>
-
-                        <!-- Top Ribbon string -->
-                        <div class="w-2.5 h-2.5 bg-red-400 rounded-full mx-auto relative z-10 shadow-sm border border-white"></div>
-                        <div class="w-0.5 h-6 bg-red-400 mx-auto -mt-1 mb-2"></div>
-
-                        <!-- Haiku vertical text block - Reversed structure for traditional right-to-left layout -->
-                        <div class="flex-grow flex justify-center items-stretch space-x-6 text-slate-800 py-4 relative z-10">
-                            <!-- Part 1 (Up) - Placed first to read from right to left in vertical-rl direction -->
-                            <div class="flex items-start justify-center font-black text-xl md:text-2xl tracking-widest pt-4">
-                                <p id="tanzaku-part-1" class="vertical-text">さくらさく</p>
-                            </div>
-                            <!-- Part 2 (Middle) -->
-                            <div class="flex items-start justify-center font-black text-xl md:text-2xl tracking-widest pt-12">
-                                <p id="tanzaku-part-2" class="vertical-text">あおぞらたかく</p>
-                            </div>
-                            <!-- Part 3 (Down) -->
-                            <div class="flex items-start justify-center font-black text-xl md:text-2xl tracking-widest pt-20">
-                                <p id="tanzaku-part-3" class="vertical-text">うれしいな</p>
-                            </div>
-                        </div>
-
-                        <!-- Author signature (Bottom left-ish vertical style) -->
-                        <div class="text-right flex justify-end items-end space-x-2 relative z-10 mt-2">
-                            <div class="text-xs font-bold border-l-2 border-red-300 pl-1.5 py-0.5 text-slate-500 flex flex-col items-end">
-                                <span class="text-[10px]">作</span>
-                                <span id="tanzaku-author" class="vertical-text font-black text-slate-800 text-sm mt-0.5" style="letter-spacing: 0.1em; line-height: 1;">りゅうた</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tanzaku utility Actions -->
-                    <div class="flex flex-col space-y-2 max-w-[280px] mx-auto">
-                        <button onclick="shareHaikuText()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-2.5 rounded-xl border-b-4 border-emerald-800 text-xs shadow flex items-center justify-center space-x-1.5">
-                            <span>📋 俳句をコピーしてお友達に送る</span>
-                        </button>
-                        <button onclick="window.print()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 rounded-xl text-xs flex items-center justify-center space-x-1">
-                            <span>🖨️ 短冊（たんざく）を印刷する</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-8 flex justify-between items-center">
-                <button onclick="changeTab('home')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 px-6 rounded-xl border text-sm">
-                    戻る
-                </button>
-            </div>
-        </div>
-    </div>
-</main>
-
-<!-- Footer info -->
-<footer class="bg-slate-100 border-t border-slate-200 mt-12 py-6">
-    <div class="max-w-5xl mx-auto px-4 text-center space-y-2">
-        <p class="text-xs md:text-sm text-slate-500">
-            ※ このアプリは小学校３年国語「俳句を楽しもう」のカリキュラムに基づいています。ご家庭での学習や学校の授業でもお使いいただけます。
-        </p>
-        <p class="text-xs text-slate-400">
-            &copy; 2026 俳句づくり学習アプリ. All rights reserved.
-        </p>
-    </div>
-</footer>
+</div>
 
 <script>
-function playSimpleSound(frequency, duration) {
-    try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
-        
-        // Volume shaping
-        gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        
-        oscillator.start();
-        oscillator.stop(audioCtx.currentTime + duration);
-    } catch (e) {
-        console.log("Audio activation requires user click first.", e);
+// ==========================================
+// Google Apps Script (GAS) 連携設定
+// ==========================================
+// ★★★ 先生へ：ここにGASのWebアプリURLを貼り付けてください ★★★
+const GAS_URL = "ここにURLを貼り付けます";
+// ==========================================
+
+let studentName = localStorage.getItem("studentName") || "";
+
+window.addEventListener('DOMContentLoaded', () => {
+    if (!studentName) {
+        document.getElementById('name-modal').classList.remove('hidden');
+    } else {
+        setNameDisplay();
+    }
+});
+
+function saveName() {
+    const nameInput = document.getElementById('student-name-input').value.trim();
+    if (nameInput) {
+        studentName = nameInput;
+        localStorage.setItem("studentName", studentName);
+        document.getElementById('name-modal').classList.add('hidden');
+        setNameDisplay();
+        showToast(`${studentName}さん、いい句を作ってね！`);
+    } else {
+        alert("なまえを入力してね！");
     }
 }
 
-// Custom Japanese drum (Wadaiko) wood hit synthesizer for rhythm tapping
-function playTaikoHit() {
-    try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        
-        osc.type = 'triangle'; // Deeper warm drum hit
-        osc.frequency.setValueAtTime(140, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.15);
-        
-        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-        
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.15);
-    } catch(e) {}
+function setNameDisplay() {
+    document.getElementById('display-student-name').textContent = studentName;
+    document.getElementById('preview-name').textContent = studentName;
 }
 
-function playSuccessSound() {
-    playSimpleSound(523.25, 0.15); // C5
-    setTimeout(() => {
-        playSimpleSound(659.25, 0.15); // E5
-    }, 120);
+function updatePreview() {
+    document.getElementById('preview-1').textContent = document.getElementById('input-1').value;
+    document.getElementById('preview-2').textContent = document.getElementById('input-2').value;
+    document.getElementById('preview-3').textContent = document.getElementById('input-3').value;
 }
 
-function playFailureSound() {
-    playSimpleSound(293.66, 0.2); // D4
-    setTimeout(() => {
-        playSimpleSound(220.00, 0.3); // A3
-    }, 150);
-}
+function submitHaiku() {
+    if (!studentName) {
+        alert("なまえが設定されていません。");
+        return;
+    }
 
-function changeTab(tabId) {
-    playSimpleSound(587.33, 0.08); // Cute navigation blip (D5)
-    
-    document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.add('hidden');
-        tab.classList.remove('block');
+    const p1 = document.getElementById('input-1').value.trim();
+    const p2 = document.getElementById('input-2').value.trim();
+    const p3 = document.getElementById('input-3').value.trim();
+
+    if (!p1 && !p2 && !p3) {
+        alert("はい句を入力してね！");
+        return;
+    }
+
+    const fullHaiku = `${p1} ${p2} ${p3}`;
+
+    // URLが初期値のままならエラーを出さずにトーストだけ表示（デモ用）
+    if (GAS_URL === "ここにURLを貼り付けます" || !GAS_URL) {
+        console.warn("GAS_URLが未設定です。送信処理をスキップします。");
+        showToast("先生に作品を送りました！（テスト）✨");
+        return;
+    }
+
+    const payload = {
+        name: studentName,
+        appName: "はい句づくり",
+        modeName: "自由創作",
+        totalQuestions: "-",
+        correctAnswers: "-",
+        correctRate: "-",
+        haikuText: fullHaiku
+    };
+
+    showToast("先生に作品を送っています...⏳");
+
+    fetch(GAS_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+            "Content-Type": "text/plain",
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(() => {
+        setTimeout(() => showToast("先生に作品がとどきました！✨"), 1000);
+        // 送信後、入力欄をクリアするかどうかは運用次第（今回はそのまま残す）
+    })
+    .catch((error) => {
+        console.error("送信エラー:", error);
+        showToast("送信に失敗しちゃったみたい💦");
     });
-    
-    const activeTab = document.getElementById(`tab-${tabId}`);
-    activeTab.classList.remove('hidden');
-    activeTab.classList.add('block');
-    
-    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function showToast(message) {
     const container = document.getElementById('toast-container');
     const toast = document.createElement('div');
-    toast.className = 'bg-slate-800 text-white text-xs font-bold px-4 py-3 rounded-xl shadow-lg border border-slate-700 mb-2 transform transition-all duration-300 opacity-0 translate-x-10';
+    toast.className = 'bg-slate-800 text-white text-sm font-bold px-4 py-3 rounded-xl shadow-lg border border-slate-700 mb-2 transform transition-all duration-300 opacity-0 translate-x-10';
     toast.textContent = message;
-    
     container.appendChild(toast);
-    setTimeout(() => {
-        toast.classList.remove('opacity-0', 'translate-x-10');
-    }, 10);
-    
+    setTimeout(() => toast.classList.remove('opacity-0', 'translate-x-10'), 10);
     setTimeout(() => {
         toast.classList.add('opacity-0', 'translate-x-10');
-        setTimeout(() => {
-            toast.remove();
-        }, 300);
-    }, 2800);
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }
-
-function countHaikuSyllables(text) {
-    if (!text) return 0;
-    
-    // Remove blank spaces
-    let cleanText = text.replace(/[\s　]/g, '');
-    
-    // Syllables list check (Japanese morae)
-    // 拗音 (ゃ, ゅ, ょ) and other small hiragana/katakana that combine with previous syllable
-    const smallChars = /[ゃゅょぁぃぅぇぉャュョァィゥェォ]/g;
-    
-    // Length minus small combining characters
-    const length = cleanText.length;
-    const smallCount = (cleanText.match(smallChars) || []).length;
-    
-    const totalSyllables = length - smallCount;
-    return totalSyllables >= 0 ? totalSyllables : 0;
-}
-
-function showSlide(slideNum) {
-    playSimpleSound(440, 0.08);
-    
-    // Hide all slide content divs
-    document.querySelectorAll('.slide-item').forEach(div => {
-        div.classList.add('hidden');
-    });
-    // Show active
-    document.getElementById(`slide-content-${slideNum}`).classList.remove('hidden');
-
-    // Toggle button selection styling
-    for (let i = 1; i <= 4; i++) {
-        const btn = document.getElementById(`btn-slide-${i}`);
-        if (i === slideNum) {
-            btn.className = "w-full text-left p-3 rounded-xl border-2 border-rose-400 bg-rose-50 text-rose-900 font-black text-sm transition-all shadow-sm";
-        } else {
-            btn.className = "w-full text-left p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 font-bold text-sm text-slate-700 transition-all";
-        }
-    }
-}
-
-const matchGamePool = [
-    {
-        emoji: "🐸",
-        situation: "池のなかに、カエルが飛びこんで、お水の音が響いたよ。",
-        parts: {
-            "5-1": "ふるいけや",
-            "7-1": "かわずとびこむ",
-            "5-2": "みずのおと"
-        },
-        author: "松尾 芭蕉",
-        desc: "「古池や かわず飛びこむ 水の音」：一番有名な、春から夏の終わりの俳句だよ。"
-    },
-    {
-        emoji: "🌻",
-        situation: "向日葵（ひまわり）の花が並んで、まるでお日さまの方を向いて笑っているみたい！",
-        parts: {
-            "5-1": "ひまわりや",
-            "7-1": "おひさまむいて",
-            "5-2": "わらってる"
-        },
-        author: "３年生のみんな",
-        desc: "夏のきらきらした太陽の光をあびている、元気いっぱいの俳句だよ。"
-    },
-    {
-        emoji: "🌰",
-        situation: "山の中でどんぐりやコブがぽとりと落ちる静かな音が聞こえたよ。",
-        parts: {
-            "5-1": "ぽとりとおち",
-            "7-1": "しずかなやまの",
-            "5-2": "おくりもの"
-        },
-        author: "３年生のみんな",
-        desc: "秋の実りあふれる山の中で、どんぐりや栗が落ちる様子をえがいた俳句だよ。"
-    }
-];
-
-let currentMatchRound = 0;
-let matchScore = 0;
-let matchSelections = { "5-1": "", "7-1": "", "5-2": "" };
-
-function initMatchGame() {
-    currentMatchRound = 0;
-    matchScore = 0;
-    matchSelections = { "5-1": "", "7-1": "", "5-2": "" };
-    
-    document.getElementById('match-score').textContent = matchScore;
-    document.getElementById('match-round').textContent = currentMatchRound + 1;
-    
-    document.getElementById('deck-container').parentElement.classList.remove('hidden');
-    document.getElementById('match-finish-panel').classList.add('hidden');
-    
-    loadMatchRound();
-}
-
-function loadMatchRound() {
-    const roundData = matchGamePool[currentMatchRound];
-    document.getElementById('match-round').textContent = currentMatchRound + 1;
-    document.getElementById('match-clue-emoji').textContent = roundData.emoji;
-    document.getElementById('match-clue-text').textContent = roundData.situation;
-    
-    // Reset selection slots view
-    matchSelections = { "5-1": "", "7-1": "", "5-2": "" };
-    document.getElementById('slot-5-1-text').textContent = "";
-    document.getElementById('slot-7-1-text').textContent = "";
-    document.getElementById('slot-5-2-text').textContent = "";
-    
-    // Create random shuffled array of parts
-    const rawOptions = Object.entries(roundData.parts).map(([slotKey, wordText]) => {
-        return { key: slotKey, text: wordText };
-    });
-    const shuffledOptions = [...rawOptions].sort(() => 0.5 - Math.random());
-    
-    // Draw deck cards
-    const deckContainer = document.getElementById('deck-container');
-    deckContainer.innerHTML = '';
-    
-    shuffledOptions.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.id = `deck-card-${opt.key}`;
-        btn.onclick = () => selectCard(opt.key, opt.text);
-        
-        let labelColor = opt.key.startsWith('5') ? 'rose' : 'amber';
-        btn.className = `bg-white hover:bg-${labelColor}-50 active:scale-95 border-2 border-${labelColor}-200 hover:border-${labelColor}-400 px-4 py-3 rounded-2xl font-black text-slate-800 text-sm shadow-sm transition-all`;
-        btn.textContent = opt.text;
-        
-        deckContainer.appendChild(btn);
-    });
-}
-
-function selectCard(partKey, partText) {
-    playTaikoHit();
-    
-    // Determine which slot of same length is empty
-    if (partKey === '5-1' || partKey === '5-2') {
-        // Try slot 5-1 first, if filled, try 5-2
-        if (!matchSelections["5-1"]) {
-            matchSelections["5-1"] = partText;
-            document.getElementById('slot-5-1-text').textContent = partText;
-            document.getElementById(`deck-card-${partKey}`).classList.add('opacity-40', 'pointer-events-none');
-        } else if (!matchSelections["5-2"]) {
-            matchSelections["5-2"] = partText;
-            document.getElementById('slot-5-2-text').textContent = partText;
-            document.getElementById(`deck-card-${partKey}`).classList.add('opacity-40', 'pointer-events-none');
-        } else {
-            showToast("5音の場所はもういっぱいだよ。入れ替えるときは、上のカードを押してキャンセルしてね！");
-        }
-    } else if (partKey === '7-1') {
-        if (!matchSelections["7-1"]) {
-            matchSelections["7-1"] = partText;
-            document.getElementById('slot-7-1-text').textContent = partText;
-            document.getElementById(`deck-card-${partKey}`).classList.add('opacity-40', 'pointer-events-none');
-        } else {
-            showToast("7音の場所はもういっぱいだよ。入れ替えるときは上のカードを押してね！");
-        }
-    }
-    
-    // Check if puzzle fully formed
-    if (matchSelections["5-1"] && matchSelections["7-1"] && matchSelections["5-2"]) {
-        evaluateMatchAnswer();
-    }
-}
-
-// Allow children to tap selected slot to recall it back to deck card
-function recallCard(slotKey) {
-    if (matchSelections[slotKey]) {
-        playSimpleSound(300, 0.1);
-        const originalText = matchSelections[slotKey];
-        matchSelections[slotKey] = "";
-        document.getElementById(`slot-${slotKey}-text`).textContent = "";
-        
-        // Find matched deck button and reactivate it
-        const roundData = matchGamePool[currentMatchRound];
-        const matchEntry = Object.entries(roundData.parts).find(([key, text]) => text === originalText);
-        if (matchEntry) {
-            const cardBtn = document.getElementById(`deck-card-${matchEntry[0]}`);
-            if (cardBtn) {
-                cardBtn.classList.remove('opacity-40', 'pointer-events-none');
-            }
-        }
-    }
-}
-
-function evaluateMatchAnswer() {
-    const roundData = matchGamePool[currentMatchRound];
-    
-    // The correct solution map
-    const correct5_1 = roundData.parts["5-1"];
-    const correct7_1 = roundData.parts["7-1"];
-    const correct5_2 = roundData.parts["5-2"];
-    
-    // Check if the current choices equal the solution parts
-    const isSymmetricAndCorrect = 
-        matchSelections["7-1"] === correct7_1 && 
-        ((matchSelections["5-1"] === correct5_1 && matchSelections["5-2"] === correct5_2) || 
-         (matchSelections["5-1"] === correct5_2 && matchSelections["5-2"] === correct5_1)); // symmetrical 5-parts
-         
-    const fbOverlay = document.getElementById('match-feedback');
-    const fbEmoji = document.getElementById('match-feedback-emoji');
-    const fbText = document.getElementById('match-feedback-text');
-    const fbDesc = document.getElementById('match-feedback-desc');
-
-    if (isSymmetricAndCorrect) {
-        playSuccessSound();
-        matchScore += 30;
-        document.getElementById('match-score').textContent = matchScore;
-        fbEmoji.textContent = "⭕";
-        fbText.textContent = "おみごと！正解です！";
-        fbDesc.textContent = roundData.desc;
-    } else {
-        playFailureSound();
-        fbEmoji.textContent = "❌";
-        fbText.textContent = "おしい！違うリズムになったよ。";
-        fbDesc.textContent = `正解は「${correct5_1}　${correct7_1}　${correct5_2}」だよ！`;
-    }
-
-    fbOverlay.classList.remove('opacity-0', 'pointer-events-none');
-    
-    // Go next round after 3.5 seconds
-    setTimeout(() => {
-        fbOverlay.classList.add('opacity-0', 'pointer-events-none');
-        
-        if (currentMatchRound < matchGamePool.length - 1) {
-            currentMatchRound++;
-            loadMatchRound();
-        } else {
-            // End of game
-            document.getElementById('deck-container').parentElement.classList.add('hidden');
-            document.getElementById('match-finish-panel').classList.remove('hidden');
-            document.getElementById('final-match-score').textContent = matchScore;
-        }
-    }, 3800);
-}
-
-const iqDatabase = [
-    {
-        emoji: "⛄",
-        situation: "ふゆの朝、おうちの外を見たら、たくさんのまっしろな雪がつもっていたよ！",
-        pre: "雪がふり",
-        answer: "つもって白い", // 7音 (つ・も・っ・て・し・ろ・い = 7音)
-        post: "あさのまち",
-        choices: ["あさからずっと", "つもって白い", "さむいふゆ"],
-        choicesCount: [7, 7, 5],
-        correctChoiceIndex: 1,
-        targetLength: 7,
-        explanation: "「つ・も・っ・て・し・ろ・い」は、ちいさい『っ』を1つと数えるのでぴったり7音になり、中の句のリズムにバッチリあてはまります！"
-    },
-    {
-        emoji: "🐚",
-        situation: "なつ休みに海へあそびに行ったら、きれいな貝がらを見つけたよ！",
-        pre: "海にいき",
-        answer: "貝がら拾う", // 7音 (か・い・が・ら・ひ・ろ・う = 7音)
-        post: "夏休み",
-        choices: ["貝がら拾う", "すなをあつめる", "あついねえ"],
-        choicesCount: [7, 8, 5],
-        correctChoiceIndex: 0,
-        targetLength: 7,
-        explanation: "「か・い・が・ら・ひ・ろ・う」はぴったり7音です。「すなをあつめる」は8音（はちおん）でリズムから飛び出してしまうよ。"
-    },
-    {
-        emoji: "🏮",
-        situation: "おまつりの夜、たくさんの提灯（ちょうちん）がキラキラかがやいていてワクワクするね！",
-        pre: "まつりの夜",
-        answer: "てらすよ", // 5音 (て・ら・す・よ)
-        post: "赤ちょうちん",
-        choices: ["てらすよ", "きれいにみえる", "たくさんあるね"],
-        choicesCount: [4, 7, 7],
-        correctChoiceIndex: 0,
-        targetLength: 4, // 4-5 syllables are acceptable poetic variants
-        explanation: "「て・ら・す・よ」は4音（またはてらすよーで5音）おまつりの夜にぴったりあう短い言葉です！"
-    }
-];
-
-let currentIqIndex = 0;
-let iqScore = 0;
-
-function initInputQuiz() {
-    currentIqIndex = 0;
-    iqScore = 0;
-    
-    document.getElementById('iq-result-panel').classList.add('hidden');
-    document.getElementById('iq-haiku-part-1').parentElement.parentElement.classList.remove('hidden');
-    document.getElementById('iq-choices-container').classList.remove('hidden');
-    document.getElementById('iq-custom-input-box').classList.remove('hidden');
-    
-    loadIqQuestion();
-}
-
-function loadIqQuestion() {
-    const q = iqDatabase[currentIqIndex];
-    
-    document.getElementById('iq-current-num').textContent = `${currentIqIndex + 1} / ${iqDatabase.length} 問`;
-    document.getElementById('iq-emoji').textContent = q.emoji;
-    document.getElementById('iq-situation').textContent = q.situation;
-    
-    document.getElementById('iq-haiku-part-1').textContent = q.pre;
-    
-    const blankEl = document.getElementById('iq-haiku-part-2');
-    blankEl.innerHTML = `<span class="text-rose-500 font-black border-b-4 border-dashed border-rose-400 px-3 py-1">（ なにが入る？ ）</span> <span class="text-[10px] bg-amber-100 text-amber-800 px-1.5 rounded-full ml-1">${q.targetLength}音</span>`;
-    
-    document.getElementById('iq-haiku-part-3').textContent = q.post;
-    
-    const choicesContainer = document.getElementById('iq-choices-container');
-    choicesContainer.innerHTML = '';
-    
-    q.choices.forEach((choiceText, index) => {
-        const charLabel = index === 0 ? 'あ' : index === 1 ? 'い' : 'う';
-        const button = document.createElement('button');
-        button.onclick = () => submitIqChoice(index);
-        button.className = "group text-left bg-white hover:bg-sky-50 active:scale-95 border-2 border-slate-200 hover:border-sky-400 p-3 rounded-2xl flex items-center justify-between transition-all shadow-sm";
-        
-        button.innerHTML = `
-            <div class="flex items-center space-x-2">
-                <span class="w-7 h-7 rounded-full bg-slate-100 group-hover:bg-sky-200 text-slate-800 font-black flex items-center justify-center text-xs">${charLabel}</span>
-                <span class="font-bold text-slate-700 text-sm">${choiceText}</span>
-            </div>
-            <span class="text-slate-300 group-hover:text-sky-500 text-sm"> (${q.choicesCount[index]}音) 👈</span>
-        `;
-        choicesContainer.appendChild(button);
-    });
-
-    const textInput = document.getElementById('iq-text-input');
-    textInput.value = '';
-    textInput.placeholder = `ここに、ぴったり ${q.targetLength}音 の言葉を自分でいれても正解になるよ！`;
-    document.getElementById('iq-live-count').textContent = '0';
-    document.getElementById('iq-live-count').className = "text-lg font-black text-slate-400";
-
-    textInput.oninput = function() {
-        const count = countHaikuSyllables(this.value);
-        const liveCountEl = document.getElementById('iq-live-count');
-        liveCountEl.textContent = count;
-        
-        if (count === q.targetLength) {
-            liveCountEl.className = "text-lg font-black text-emerald-600 animate-pulse";
-            playTaikoHit();
-        } else {
-            liveCountEl.className = "text-lg font-black text-slate-400";
-        }
-    };
-
-    const progressPercent = ((currentIqIndex + 1) / iqDatabase.length) * 100;
-    document.getElementById('iq-progress').style.width = `${progressPercent}%`;
-}
-
-function submitIqChoice(choiceIndex) {
-    const q = iqDatabase[currentIqIndex];
-    const isCorrect = choiceIndex === q.correctChoiceIndex;
-    
-    showIqFeedback(isCorrect, q.explanation);
-}
-
-function submitCustomIqAnswer() {
-    const q = iqDatabase[currentIqIndex];
-    const userText = document.getElementById('iq-text-input').value.trim();
-    
-    if (!userText) {
-        showToast("なにか言葉を入力してね！");
-        return;
-    }
-
-    const userCount = countHaikuSyllables(userText);
-    const isCorrect = userCount === q.targetLength;
-    
-    let feedbackDesc = q.explanation;
-    if (isCorrect) {
-        feedbackDesc = `「${userText}」はぴったり ${userCount}音 だね！すばらしい創作力（そうさくりょく）です！`;
-    } else {
-        feedbackDesc = `「${userText}」は ${userCount}音 です。今回は、ぴったり ${q.targetLength}音 になる言葉をさがしてね。`;
-    }
-
-    showIqFeedback(isCorrect, feedbackDesc);
-}
-
-function showIqFeedback(isCorrect, textDesc) {
-    const panel = document.getElementById('iq-feedback-panel');
-    const icon = document.getElementById('iq-fb-icon');
-    const title = document.getElementById('iq-fb-title');
-    const explanation = document.getElementById('iq-fb-explanation');
-    
-    if (isCorrect) {
-        playSuccessSound();
-        iqScore++;
-        icon.textContent = "⭕";
-        title.textContent = "大せいかい！";
-        title.className = "text-2xl font-black text-green-600";
-    } else {
-        playFailureSound();
-        icon.textContent = "❌";
-        title.textContent = "ざんねん！ちがうリズムです。";
-        title.className = "text-2xl font-black text-red-500";
-    }
-
-    explanation.textContent = textDesc;
-    panel.classList.remove('hidden');
-}
-
-function nextIqQuestion() {
-    document.getElementById('iq-feedback-panel').classList.add('hidden');
-    
-    if (currentIqIndex < iqDatabase.length - 1) {
-        currentIqIndex++;
-        loadIqQuestion();
-    } else {
-        document.getElementById('iq-haiku-part-1').parentElement.parentElement.classList.add('hidden');
-        document.getElementById('iq-choices-container').classList.add('hidden');
-        document.getElementById('iq-custom-input-box').classList.add('hidden');
-        
-        document.getElementById('iq-result-panel').classList.remove('hidden');
-        document.getElementById('iq-final-score').textContent = iqScore;
-    }
-}
-
-const lyricsQuizDatabase = [
-    {
-        emoji: "🎏",
-        song: "こいのぼり",
-        hint: "「やねより　たかい　こいのぼり〜♪」",
-        question: "「こいのぼり」の歌詞のなかで、ぴったり「５音」になっているフレーズはどれかな？",
-        choices: [
-            { text: "やねよりたかい", count: 7 },
-            { text: "こいのぼり", count: 5 },
-            { text: "おおきいまごいは", count: 7 }
-        ],
-        answerIndex: 1,
-        explanation: "「こ・い・の・ぼ・り」はぴったり5音のリズムです！「やねよりたかい」は「や・ね・よ・り・た・か・い」で7音になるよ。"
-    },
-    {
-        emoji: "🗻",
-        song: "ふじの山",
-        hint: "「あたまを　雲の　上に出し〜♪」",
-        question: "「ふじの山」の歌詞のなかで、ぴったり「７音」になっているフレーズはどれかな？",
-        choices: [
-            { text: "あたまをくもの", count: 7 },
-            { text: "いうえにだし", count: 5 },
-            { text: "ふじはにっぽん", count: 7 } // ふ・じ・は・に・っ・ぽ・ん で 7音 (っ・んは1音と数えます)
-        ],
-        answerIndex: 0, // "あたまをくもの" or "ふじはにっぽん" both are 7, but let's make index 0 (あたまをくもの: あ・た・ま・を・く・も・の = 7音) the primary
-        explanation: "「あ・た・ま・を・く・も・の」はぴったり7音で、中の句のリズムをもっています！"
-    },
-    {
-        emoji: "🍁",
-        song: "もみじ",
-        hint: "「あきのゆうひに　てるやまもみじ〜♪」",
-        question: "「もみじ」の歌のなかで、ぴったり「７音」になっているフレーズはどれかな？",
-        choices: [
-            { text: "てる", count: 2 },
-            { text: "あきのゆうひに", count: 7 },
-            { text: "にしきよ", count: 4 }
-        ],
-        answerIndex: 1,
-        explanation: "「あ・き・の・ゆ・う・ひ・に」はぴったり7音のリズムです！この歌は、5音と7音のリズムが交互に美しく重なっています。"
-    },
-    {
-        emoji: "🎋",
-        song: "たなばたさま",
-        hint: "「ささの葉さらさら　のきばにゆれる〜♪」",
-        question: "「たなばたさま」の歌詞のなかで、ぴったり「７音」になっているフレーズはどれかな？",
-        choices: [
-            { text: "のきばにゆれる", count: 7 },
-            { text: "ささのは", count: 4 },
-            { text: "さらさら", count: 4 }
-        ],
-        answerIndex: 0,
-        explanation: "「の・き・ば・に・ゆ・れ・る」は完璧な7音のきれいな日本語です！"
-    },
-    {
-        emoji: "🦗",
-        song: "むしのこえ",
-        hint: "「あれ松虫が　鳴いている〜♪」",
-        question: "「むしのこえ」の歌のなかで、ぴったり「５音」になっているフレーズはどれかな？",
-        choices: [
-            { text: "あれまつむしが", count: 7 },
-            { text: "ないている", count: 5 },
-            { text: "おのもすだれ", count: 6 }
-        ],
-        answerIndex: 1,
-        explanation: "「な・い・て・い・る」はぴったり5音です！歌のメロディとリズムがしっかりとあっていますね。"
-    }
-];
-
-let currentLqIndex = 0;
-let lqScore = 0;
-
-function initLyricsQuiz() {
-    currentLqIndex = 0;
-    lqScore = 0;
-    
-    document.getElementById('lq-result-panel').classList.add('hidden');
-    document.getElementById('lq-choices-container').parentElement.parentElement.classList.remove('hidden');
-    
-    loadLqQuestion();
-}
-
-function loadLqQuestion() {
-    const q = lyricsQuizDatabase[currentLqIndex];
-    
-    document.getElementById('lq-current-num').textContent = `${currentLqIndex + 1} / ${lyricsQuizDatabase.length} 問`;
-    document.getElementById('lq-emoji').textContent = q.emoji;
-    document.getElementById('lq-song-title').textContent = `🎵 唱歌・童謡：「${q.song}」`;
-    document.getElementById('lq-target-instruction').textContent = q.question;
-    document.getElementById('lq-lyrics-hint').innerHTML = `<span class="text-yellow-300 font-extrabold">「</span>${q.hint}<span class="text-yellow-300 font-extrabold">」</span>`;
-    
-    // Render Choices
-    const choicesContainer = document.getElementById('lq-choices-container');
-    choicesContainer.innerHTML = '';
-    
-    q.choices.forEach((choice, index) => {
-        const charLabel = index === 0 ? 'あ' : index === 1 ? 'い' : 'う';
-        const button = document.createElement('button');
-        button.onclick = () => submitLqChoice(index);
-        button.className = "group text-left bg-white hover:bg-indigo-50 active:scale-95 border-2 border-indigo-100 hover:border-indigo-400 p-4 rounded-2xl flex items-center justify-between transition-all shadow-sm w-full";
-        
-        button.innerHTML = `
-            <div class="flex items-center space-x-2">
-                <span class="w-8 h-8 rounded-full bg-indigo-100 group-hover:bg-indigo-200 text-indigo-800 font-black flex items-center justify-center text-sm">${charLabel}</span>
-                <span class="font-extrabold text-slate-800 text-sm">${choice.text}</span>
-            </div>
-            <span class="text-indigo-400 font-bold text-xs">(${choice.count}音)</span>
-        `;
-        choicesContainer.appendChild(button);
-    });
-
-    // Update Progress
-    const progressPercent = ((currentLqIndex + 1) / lyricsQuizDatabase.length) * 100;
-    document.getElementById('lq-progress').style.width = `${progressPercent}%`;
-}
-
-function submitLqChoice(choiceIndex) {
-    const q = lyricsQuizDatabase[currentLqIndex];
-    const isCorrect = choiceIndex === q.answerIndex;
-    
-    const panel = document.getElementById('lq-feedback-panel');
-    const icon = document.getElementById('lq-fb-icon');
-    const title = document.getElementById('lq-fb-title');
-    const explanation = document.getElementById('lq-fb-explanation');
-    
-    if (isCorrect) {
-        playSuccessSound();
-        lqScore++;
-        icon.textContent = "⭕";
-        title.textContent = "お見ごと！大せいかい！";
-        title.className = "text-2xl font-black text-indigo-600";
-    } else {
-        playFailureSound();
-        icon.textContent = "❌";
-        title.textContent = "ざんねん！ちがうリズムです。";
-        title.className = "text-2xl font-black text-red-500";
-    }
-
-    explanation.textContent = q.explanation;
-    panel.classList.remove('hidden');
-}
-
-function nextLqQuestion() {
-    document.getElementById('lq-feedback-panel').classList.add('hidden');
-    
-    if (currentLqIndex < lyricsQuizDatabase.length - 1) {
-        currentLqIndex++;
-        loadLqQuestion();
-    } else {
-        document.getElementById('lq-choices-container').parentElement.parentElement.classList.add('hidden');
-        document.getElementById('lq-result-panel').classList.remove('hidden');
-        document.getElementById('lq-final-score').textContent = lqScore;
-    }
-}
-
-function initCreateMode() {
-    // Clear custom inputs
-    document.getElementById('create-part-1').value = "";
-    document.getElementById('create-part-2').value = "";
-    document.getElementById('create-part-3').value = "";
-    document.getElementById('create-author').value = "";
-    
-    updateHaikuCounter(1);
-    updateHaikuCounter(2);
-    updateHaikuCounter(3);
-    
-    renderTanzaku();
-    toggleKigoTab('spring');
-}
-
-function updateHaikuCounter(partNum) {
-    const text = document.getElementById(`create-part-${partNum}`).value;
-    const count = countHaikuSyllables(text);
-    
-    const badge = document.getElementById(`badge-part-${partNum}`);
-    const target = partNum === 2 ? 7 : 5;
-    
-    badge.textContent = `${count} / ${target}音`;
-    
-    if (count === target) {
-        badge.className = "text-xs font-black px-2 py-0.5 rounded-full bg-emerald-500 text-white animate-bounce";
-    } else if (count > target) {
-        badge.className = "text-xs font-black px-2 py-0.5 rounded-full bg-red-400 text-white";
-    } else {
-        badge.className = "text-xs font-black px-2 py-0.5 rounded-full bg-slate-200 text-slate-700";
-    }
-
-    renderTanzaku();
-}
-
-function insertKigo(kigoText) {
-    playTaikoHit();
-    
-    // Choose empty slot to insert, defaults to slot 2 (中の句)
-    const p1 = document.getElementById('create-part-1');
-    const p2 = document.getElementById('create-part-2');
-    const p3 = document.getElementById('create-part-3');
-    
-    if (!p1.value) {
-        p1.value = kigoText;
-        updateHaikuCounter(1);
-    } else if (!p2.value) {
-        p2.value = kigoText;
-        updateHaikuCounter(2);
-    } else {
-        p3.value = kigoText;
-        updateHaikuCounter(3);
-    }
-    
-    showToast(`季語「${kigoText}」を俳句にいれたよ！`);
-}
-
-function renderTanzaku() {
-    const p1 = document.getElementById('create-part-1').value || "さくらさく";
-    const p2 = document.getElementById('create-part-2').value || "あおぞらたかく";
-    const p3 = document.getElementById('create-part-3').value || "うれしいな";
-    const author = document.getElementById('create-author').value || "りゅうた";
-    
-    // Render onto vertical paragraph spans correctly
-    document.getElementById('tanzaku-part-1').textContent = p1;
-    document.getElementById('tanzaku-part-2').textContent = p2;
-    document.getElementById('tanzaku-part-3').textContent = p3;
-    document.getElementById('tanzaku-author').textContent = author;
-}
-
-// Seasonal Kigo dictionary tabs switching
-function toggleKigoTab(season) {
-    playSimpleSound(440, 0.05);
-    
-    // Hide all containers
-    document.querySelectorAll('.kigo-container-box').forEach(div => {
-        div.classList.add('hidden');
-    });
-    
-    // Show selected
-    document.getElementById(`kigo-box-${season}`).classList.remove('hidden');
-    
-    // Style Tab buttons
-    const seasons = ['spring', 'summer', 'autumn', 'winter'];
-    seasons.forEach(s => {
-        const btn = document.getElementById(`kigo-tab-${s}`);
-        let colorTheme = s === 'spring' ? 'pink' : s === 'summer' ? 'sky' : s === 'autumn' ? 'amber' : 'slate';
-        
-        if (s === season) {
-            btn.className = `bg-${colorTheme}-400 text-white font-black py-1 px-1 rounded-lg text-xs`;
-        } else {
-            btn.className = `bg-slate-100 text-slate-700 font-bold py-1 px-1 rounded-lg hover:bg-slate-200 text-xs`;
-        }
-    });
-}
-
-// Changing theme of printable tanzaku card
-const themesMap = {
-    sakura: { bg: 'bg-pink-50', border: 'border-pink-100', text: 'text-slate-800' },
-    leaf: { bg: 'bg-emerald-50', border: 'border-emerald-100', text: 'text-slate-800' },
-    sky: { bg: 'bg-sky-50', border: 'border-sky-100', text: 'text-slate-800' },
-    autumn: { bg: 'bg-amber-50', border: 'border-amber-100', text: 'text-slate-800' }
-};
-
-function changeTanzakuTheme(themeName) {
-    playSimpleSound(480, 0.08);
-    const card = document.getElementById('print-area');
-    const style = themesMap[themeName];
-    
-    // Clean classes
-    card.className = `w-full max-w-[280px] mx-auto ${style.bg} ${style.border} border-8 rounded-3xl p-6 shadow-xl waving-card min-h-[420px] flex flex-col justify-between text-center relative overflow-hidden transition-all duration-300`;
-}
-
-function shareHaikuText() {
-    const p1 = document.getElementById('create-part-1').value || "さくらさく";
-    const p2 = document.getElementById('create-part-2').value || "あおぞらたかく";
-    const p3 = document.getElementById('create-part-3').value || "うれしいな";
-    const author = document.getElementById('create-author').value || "りゅうた";
-    
-    const formattedHaiku = `【わたしの俳句】\n${p1}\n${p2}\n${p3}\n（作：${author}） #俳句をたのしもう`;
-    
-    // Copy using clipboard fallback support
-    const textarea = document.createElement('textarea');
-    textarea.value = formattedHaiku;
-    document.body.appendChild(textarea);
-    textarea.select();
-    
-    try {
-        document.execCommand('copy');
-        playSuccessSound();
-        showToast("クリップボードにコピーしたよ！お友達に貼り付けて送ってね。");
-    } catch (err) {
-        showToast("うまくコピーできなかったので、直接書き写してみてね！");
-    }
-    document.body.removeChild(textarea);
-}
-
-// Autostart defaults
-window.onload = function() {
-    initMatchGame();
-};
 </script>
-
 </body>
 </html>
