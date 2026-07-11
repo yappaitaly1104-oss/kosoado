@@ -52,7 +52,7 @@
 
 <!-- Header with mascot -->
 <header class="bg-gradient-to-r from-green-400 via-teal-400 to-blue-400 text-white shadow-md">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
         <div class="flex items-center space-x-2">
             <!-- Cute SVG Mascot (Kosoado-Nyan) -->
             <svg class="w-12 h-12 bg-white rounded-full p-1" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -91,7 +91,7 @@
 </header>
 
 <!-- Main Container -->
-<main class="flex-grow max-w-4xl w-full mx-auto p-4 flex flex-col justify-start">
+<main class="flex-grow max-w-5xl w-full mx-auto p-4 flex flex-col justify-start">
     
     <!-- Toast notification container -->
     <div id="toast-container" class="fixed top-5 right-5 z-50 pointer-events-none"></div>
@@ -130,53 +130,69 @@
             </div>
         </div>
 
-        <!-- Mode Grid Selection -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Mode Grid Selection (Updated to 4 items) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <!-- Learning Mode Card -->
-            <div class="bg-gradient-to-b from-sky-50 to-sky-100 rounded-3xl p-6 border-4 border-sky-300 shadow-md hover:shadow-xl transition-all flex flex-col justify-between">
+            <div class="bg-gradient-to-b from-sky-50 to-sky-100 rounded-3xl p-5 border-4 border-sky-300 shadow-md hover:shadow-xl transition-all flex flex-col justify-between">
                 <div class="space-y-3">
-                    <div class="bg-sky-400 text-white w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shadow-inner font-bold">①</div>
-                    <h3 class="text-xl font-bold text-sky-900">
+                    <div class="bg-sky-400 text-white w-10 h-10 rounded-2xl flex items-center justify-center text-xl shadow-inner font-bold">①</div>
+                    <h3 class="text-lg font-bold text-sky-900 leading-tight">
                         <ruby>図解<rt>ずかい</rt></ruby>とアニメでまなぶ
                     </h3>
-                    <p class="text-xs md:text-sm text-sky-700 leading-relaxed">
+                    <p class="text-xs text-sky-700 leading-relaxed">
                         話し手（自分）と聞き手（相手）からの「きょり」によって、言葉がどうかわるかアニメでたしかめよう！
                     </p>
                 </div>
-                <button onclick="changeTab('learn')" class="mt-6 w-full bg-sky-500 hover:bg-sky-400 text-white font-black py-3 rounded-2xl border-b-4 border-sky-700 text-base shadow transition-all transform hover:-translate-y-1">
+                <button onclick="changeTab('learn')" class="mt-4 w-full bg-sky-500 hover:bg-sky-400 text-white font-black py-2.5 rounded-2xl border-b-4 border-sky-700 text-sm shadow transition-all transform hover:-translate-y-1">
                     📖 アニメでまなぶ！
                 </button>
             </div>
 
             <!-- Matching Game Card -->
-            <div class="bg-gradient-to-b from-purple-50 to-purple-100 rounded-3xl p-6 border-4 border-purple-300 shadow-md hover:shadow-xl transition-all flex flex-col justify-between">
+            <div class="bg-gradient-to-b from-purple-50 to-purple-100 rounded-3xl p-5 border-4 border-purple-300 shadow-md hover:shadow-xl transition-all flex flex-col justify-between">
                 <div class="space-y-3">
-                    <div class="bg-purple-400 text-white w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shadow-inner font-bold">②</div>
-                    <h3 class="text-xl font-bold text-purple-900">
+                    <div class="bg-purple-400 text-white w-10 h-10 rounded-2xl flex items-center justify-center text-xl shadow-inner font-bold">②</div>
+                    <h3 class="text-lg font-bold text-purple-900 leading-tight">
                         こそあど仕分けゲーム
                     </h3>
-                    <p class="text-xs md:text-sm text-purple-700 leading-relaxed">
+                    <p class="text-xs text-purple-700 leading-relaxed">
                         「これ」「そこ」「あっち」「どの」など、まざりあった言葉をただしく「こ・そ・あ・ど」に分けよう！
                     </p>
                 </div>
-                <button onclick="changeTab('game'); initSortingGame();" class="mt-6 w-full bg-purple-500 hover:bg-purple-400 text-white font-black py-3 rounded-2xl border-b-4 border-purple-700 text-base shadow transition-all transform hover:-translate-y-1">
+                <button onclick="changeTab('game'); initSortingGame();" class="mt-4 w-full bg-purple-500 hover:bg-purple-400 text-white font-black py-2.5 rounded-2xl border-b-4 border-purple-700 text-sm shadow transition-all transform hover:-translate-y-1">
                     🎮 仕分けにちょうせん！
                 </button>
             </div>
 
             <!-- Quiz Card -->
-            <div class="bg-gradient-to-b from-amber-50 to-amber-100 rounded-3xl p-6 border-4 border-amber-300 shadow-md hover:shadow-xl transition-all flex flex-col justify-between">
+            <div class="bg-gradient-to-b from-amber-50 to-amber-100 rounded-3xl p-5 border-4 border-amber-300 shadow-md hover:shadow-xl transition-all flex flex-col justify-between">
                 <div class="space-y-3">
-                    <div class="bg-amber-400 text-white w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shadow-inner font-bold">③</div>
-                    <h3 class="text-xl font-bold text-amber-900">
+                    <div class="bg-amber-400 text-white w-10 h-10 rounded-2xl flex items-center justify-center text-xl shadow-inner font-bold">③</div>
+                    <h3 class="text-lg font-bold text-amber-900 leading-tight">
                         ３択クイズにちょうせん
                     </h3>
-                    <p class="text-xs md:text-sm text-amber-700 leading-relaxed">
+                    <p class="text-xs text-amber-700 leading-relaxed">
                         光村図書の教科書にピッタリのクイズ！さいごにカッコいい「認定証（にんていしょう）」がもらえるよ。
                     </p>
                 </div>
-                <button onclick="changeTab('quiz'); startQuiz();" class="mt-6 w-full bg-amber-500 hover:bg-amber-400 text-white font-black py-3 rounded-2xl border-b-4 border-amber-700 text-base shadow transition-all transform hover:-translate-y-1">
+                <button onclick="changeTab('quiz'); startQuiz();" class="mt-4 w-full bg-amber-500 hover:bg-amber-400 text-white font-black py-2.5 rounded-2xl border-b-4 border-amber-700 text-sm shadow transition-all transform hover:-translate-y-1">
                     📝 クイズをやる！
+                </button>
+            </div>
+
+            <!-- Challenge Mode Card (New!) -->
+            <div class="bg-gradient-to-b from-rose-950 to-slate-900 rounded-3xl p-5 border-4 border-rose-500 shadow-md hover:shadow-xl transition-all flex flex-col justify-between text-white">
+                <div class="space-y-3">
+                    <div class="bg-rose-500 text-white w-10 h-10 rounded-2xl flex items-center justify-center text-xl shadow-inner font-bold">🔥</div>
+                    <h3 class="text-lg font-bold text-rose-200 leading-tight">
+                        チャレンジモード
+                    </h3>
+                    <p class="text-xs text-rose-300/90 leading-relaxed">
+                        大人でもまちがえる！？文脈（ぶんみゃく）や、電話での会話など、ウルトラむずかしい応用問題！
+                    </p>
+                </div>
+                <button onclick="changeTab('challenge'); startChallenge();" class="mt-4 w-full bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white font-black py-2.5 rounded-2xl border-b-4 border-rose-900 text-sm shadow transition-all transform hover:-translate-y-1">
+                    😈 超むずかしいクイズ！
                 </button>
             </div>
         </div>
@@ -449,7 +465,7 @@
             </div>
 
             <!-- Quiz Card Box -->
-            <div class="bg-amber-50/50 rounded-2xl p-4 border-2 border-amber-200 space-y-6 min-h-[320px] flex flex-col justify-between">
+            <div class="bg-amber-50/50 rounded-2xl p-4 border-2 border-amber-200 space-y-6 min-h-[320px] flex flex-col justify-between animate-container">
                 
                 <!-- Visual / Situation Indicator for Quiz -->
                 <div class="flex flex-col md:flex-row gap-4 items-center bg-white p-4 rounded-xl border border-amber-100 shadow-sm">
@@ -457,7 +473,7 @@
                     <div id="quiz-emoji-area" class="text-5xl p-3 bg-amber-100 rounded-xl flex items-center justify-center min-w-[70px]">
                         🍎
                     </div>
-                    <div>
+                    <div class="flex-1">
                         <span id="quiz-situation-badge" class="bg-amber-100 text-amber-800 text-[10px] px-2.5 py-0.5 rounded-full font-bold">じょうきょう</span>
                         <p id="quiz-situation-text" class="text-xs md:text-sm text-slate-500 mt-1">「わたし」の目の前にあるリンゴについて話しています。</p>
                         <h3 id="quiz-question-text" class="text-lg md:text-xl font-bold text-slate-800 mt-1 leading-snug">
@@ -467,7 +483,7 @@
                 </div>
 
                 <!-- Answer options -->
-                <div class="grid grid-cols-1 gap-3">
+                <div id="quiz-options-container" class="grid grid-cols-1 gap-3">
                     <button onclick="submitQuizAnswer(0)" class="quiz-option-btn group text-left bg-white hover:bg-amber-50 active:bg-amber-100 border-2 border-slate-200 hover:border-amber-400 p-4 rounded-2xl flex items-center justify-between transition-all shadow-sm">
                         <div class="flex items-center space-x-3">
                             <span class="w-8 h-8 rounded-full bg-slate-100 group-hover:bg-amber-200 text-slate-700 font-black flex items-center justify-center text-sm">ア</span>
@@ -563,11 +579,133 @@
             </div>
         </div>
     </div>
+
+    <!-- CHALLENGE TAB (NEW!) -->
+    <div id="tab-challenge" class="tab-content hidden space-y-6 bounce-in">
+        <div class="bg-slate-900 rounded-3xl p-6 shadow-2xl border-4 border-rose-500 text-white">
+            <!-- Header for Challenge -->
+            <div class="flex justify-between items-center border-b border-rose-950 pb-4 mb-4">
+                <div>
+                    <h2 class="text-xl md:text-2xl font-black text-rose-400 flex items-center">
+                        🔥 ウルトラむずかしい！チャレンジモード
+                    </h2>
+                    <p class="text-xs text-rose-300 font-bold">文章や、特別なシチュエーションの応用問題に答えよう！</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs text-rose-400 font-bold">もんめい</p>
+                    <p class="text-sm font-black text-rose-200"><span id="challenge-current-num">1</span> / 5 問</p>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-800 rounded-full h-3 mb-6 relative overflow-hidden">
+                <div id="challenge-progress" class="bg-gradient-to-r from-rose-500 to-red-500 h-3 rounded-full transition-all duration-300" style="width: 20%;"></div>
+            </div>
+
+            <!-- Quiz Card Box -->
+            <div class="bg-slate-950 rounded-2xl p-4 border-2 border-rose-900/60 space-y-6 min-h-[320px] flex flex-col justify-between">
+                <!-- Visual / Situation Indicator -->
+                <div class="flex flex-col md:flex-row gap-4 items-center bg-slate-900 p-4 rounded-xl border border-rose-950 shadow-inner">
+                    <div id="challenge-emoji-area" class="text-5xl p-3 bg-rose-950/50 rounded-xl flex items-center justify-center min-w-[70px]">
+                        📞
+                    </div>
+                    <div class="flex-1">
+                        <span class="bg-rose-900 text-rose-200 text-[10px] px-2.5 py-0.5 rounded-full font-bold">ウルトラじょうきょう</span>
+                        <p id="challenge-situation-text" class="text-xs md:text-sm text-rose-300 mt-1">シチュエーションがここに入ります。</p>
+                        <h3 id="challenge-question-text" class="text-lg md:text-xl font-bold text-white mt-1 leading-snug">
+                            問題文がここに入ります。
+                        </h3>
+                    </div>
+                </div>
+
+                <!-- Options -->
+                <div id="challenge-options-container" class="grid grid-cols-1 gap-3">
+                    <!-- Option buttons will be rendered inside via JavaScript -->
+                </div>
+            </div>
+
+            <!-- Explanatory modal -->
+            <div id="challenge-feedback-panel" class="hidden fixed inset-0 z-30 bg-black/70 flex items-center justify-center p-4">
+                <div class="bg-slate-900 text-white rounded-3xl max-w-md w-full p-6 shadow-2xl border-4 border-rose-500 space-y-4 text-center">
+                    <span id="challenge-fb-icon" class="text-6xl block animate-bounce">⭕</span>
+                    <h3 id="challenge-fb-title" class="text-2xl font-black text-rose-400">せいかい！</h3>
+                    <p id="challenge-fb-explanation" class="text-sm text-rose-200 leading-relaxed bg-slate-950 p-4 rounded-xl border border-rose-950">
+                        解説が入ります。
+                    </p>
+                    <button onclick="nextChallengeQuestion()" class="w-full bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white font-black py-3 rounded-2xl border-b-4 border-rose-900 shadow">
+                        つぎの超難問へ 👉
+                    </button>
+                </div>
+            </div>
+
+            <!-- Certificate Screen at the end -->
+            <div id="challenge-result-panel" class="hidden bg-gradient-to-b from-slate-950 to-rose-950 rounded-3xl p-6 border-4 border-rose-500 text-center space-y-6 text-white">
+                <div>
+                    <h3 class="text-3xl font-black text-rose-400 tracking-wider">🔥 チャレンジクリア！ 🔥</h3>
+                    <p class="text-sm text-rose-200">全問突破おめでとう！きみの正解数は…</p>
+                </div>
+
+                <!-- Score Big Badge -->
+                <div class="inline-block relative">
+                    <div class="w-32 h-32 bg-slate-900 rounded-full border-4 border-rose-500 flex items-center justify-center shadow-lg">
+                        <div>
+                            <span id="challenge-final-score" class="text-4xl font-black text-rose-400">5</span>
+                            <span class="text-xs text-rose-200 font-bold">/ 5問</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ULTRA MASTER CERTIFICATE -->
+                <div id="challenge-certificate-card" class="bg-slate-900 border-8 border-rose-600 rounded-2xl p-6 shadow-2xl max-w-lg mx-auto relative overflow-hidden text-left">
+                    <!-- Ribbon -->
+                    <div class="absolute -top-4 -right-12 bg-rose-600 text-white font-bold text-xs py-2 w-36 rotate-45 shadow text-center">
+                        神レベル合格！
+                    </div>
+                    <!-- Certificate Title -->
+                    <h4 class="text-2xl font-black text-rose-400 mb-2 text-center">ウルトラこそあどマスター認定証</h4>
+                    <p class="text-xs text-rose-300 mb-6 text-center">小学校３年 国語・こくご科 【最難関チャレンジ】</p>
+
+                    <div class="space-y-4 text-slate-200 text-sm leading-relaxed mb-6">
+                        <p class="font-bold text-center">
+                            きみは、電話での会話や、文章の指示語など、<br>
+                            大人でも悩む「超・高度なこそあど言葉」のルールを<br>
+                            完全にマスターしたことを、ここに証明します！
+                        </p>
+                    </div>
+
+                    <!-- Seal -->
+                    <div class="flex justify-between items-end border-t border-dashed border-rose-950 pt-4">
+                        <span class="text-xs text-rose-400 font-bold">こそあど言葉特別研究機関 より</span>
+                        <!-- Stamp -->
+                        <div class="w-16 h-16 border-2 border-rose-500 rounded-full flex items-center justify-center relative rotate-12 bg-rose-950">
+                            <span class="text-rose-400 font-black text-[9px] text-center leading-none">ウルトラ<br>完全合格</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center space-x-3">
+                    <button onclick="startChallenge()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 px-6 rounded-xl shadow border-b-4 border-rose-800 text-sm">
+                        もう一度チャレンジする
+                    </button>
+                    <button onclick="changeTab('home')" class="bg-slate-800 hover:bg-slate-750 text-slate-200 font-bold py-2.5 px-6 rounded-xl border border-slate-700 text-sm">
+                        ホームに戻る
+                    </button>
+                </div>
+            </div>
+
+            <!-- Footer for Challenge Tab -->
+            <div class="mt-6 flex justify-between items-center">
+                <button onclick="changeTab('home')" class="bg-slate-800 hover:bg-slate-750 text-slate-300 font-bold py-2.5 px-6 rounded-xl border border-slate-700 text-sm">
+                    戻る
+                </button>
+            </div>
+        </div>
+    </div>
 </main>
 
 <!-- Footer -->
 <footer class="bg-slate-100 border-t border-slate-200 mt-12 py-6">
-    <div class="max-w-4xl mx-auto px-4 text-center space-y-2">
+    <div class="max-w-5xl mx-auto px-4 text-center space-y-2">
         <p class="text-xs md:text-sm text-slate-500">
             ※ このアプリは小学校３年国語「こそあど言葉」のカリキュラムに基づいています。ご家庭での家庭学習や学校の授業でもお使いいただけます。
         </p>
@@ -616,6 +754,16 @@ function playFailureSound() {
     setTimeout(() => {
         playSimpleSound(220.00, 0.3); // A3
     }, 150);
+}
+
+function playUltraVictorySound() {
+    // Elegant arpeggio for ultra challenge victory
+    const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+    notes.forEach((freq, index) => {
+        setTimeout(() => {
+            playSimpleSound(freq, 0.2);
+        }, index * 100);
+    });
 }
 
 // Tab Navigation
@@ -950,6 +1098,7 @@ function startQuiz() {
     document.getElementById('quiz-progress').style.width = '16.6%';
     
     // Reveal original options
+    document.getElementById('quiz-emoji-area').parentElement.classList.remove('hidden');
     const optionButtons = document.querySelectorAll('.quiz-option-btn');
     optionButtons.forEach(btn => btn.classList.remove('hidden'));
     
@@ -1031,13 +1180,168 @@ function showQuizResults() {
     if (quizScore === quizQuestions.length) {
         // Master Perfect
         certCard.className = "bg-white border-8 border-amber-400 rounded-2xl p-6 shadow-lg max-w-lg mx-auto relative overflow-hidden bounce-in";
-        playSimpleSound(523.25, 0.1);
-        setTimeout(() => playSimpleSound(659.25, 0.1), 100);
-        setTimeout(() => playSimpleSound(783.99, 0.1), 200);
+        playSuccessSound();
         setTimeout(() => playSimpleSound(1046.50, 0.4), 300); // Perfect High C
     } else {
         // Regular Pass
         certCard.className = "bg-white border-8 border-slate-300 rounded-2xl p-6 shadow-lg max-w-lg mx-auto relative overflow-hidden";
+        playSimpleSound(523.25, 0.2);
+    }
+}
+
+// ==========================================
+// CHALLENGE MODE DATABASE & CONTROLLER (NEW!)
+// ==========================================
+const challengeQuestions = [
+    {
+        emoji: "📞",
+        situation: "電話（でんわ）で友達（ともだち）と話しています。友達がいる場所の天気を聞くときはどれ？",
+        question: "「（　　）の天気は、雨がふっている？」",
+        options: ["こっち", "そっち", "あっち"],
+        answer: 1,
+        explanation: "電話の相手がいる場所は、自分からは遠く見えなくても「聞き手の近く」と同じあつかいになるので「そ」言葉の「そっち」を使うのがただしいルールです！"
+    },
+    {
+        emoji: "🚲",
+        situation: "前に出てきた「じてんしゃ」について話します。『昨日、新しい自転車を買ってもらったんだ。（　　）は、とてもかっこいいんだよ。』",
+        question: "かっこに入る、正しい言葉は？",
+        options: ["これ", "それ", "あれ"],
+        answer: 1,
+        explanation: "お話の文章（ぶんしょう）の中で「前に一度出てきたこと」を指すときは、目の前になくても「そ」言葉の「それ」を使う特別なルールがあります！"
+    },
+    {
+        emoji: "🗺️",
+        situation: "別の町にすむ友達と、手紙（てがみ）でむかし一緒によく遊んだ思い出の「ひまわり公園」の話をしています。",
+        question: "「ふたりで遊んだ（　　）公園、ひまわりがきれいだったね。」",
+        options: ["この", "その", "あの"],
+        answer: 2,
+        explanation: "ふたりともよく知っている「共通の思い出」を指すときは、いま目の前になくても「あ」言葉の「あの」を使います！"
+    },
+    {
+        emoji: "🐈",
+        situation: "友達が「あそこの木の下にいる猫、かわいい！」と言いました。でも、きみからはよく見えません。なんて聞き返す？",
+        question: "「えっ？（　　）猫のこと？」",
+        options: ["どの", "あの", "その"],
+        answer: 2,
+        explanation: "相手が「あれ」と言ったものを、自分があまりよくわかっておらず聞き返すときは「そ」言葉の「その（それ）」を使います。相手の心の中にある話題を指すからです。"
+    },
+    {
+        emoji: "🎒",
+        situation: "学校の教室（きょうしつ）で、先生がクラス全員に指示（しじ）を出しています。",
+        question: "「みんな、自分のランドセルは（　　）においてね。」",
+        options: ["ここ", "そこ", "どこ"],
+        answer: 1,
+        explanation: "先生（話し手）から離れて、生徒たち（聞き手）全員の手元（ちかく）に置いてほしいため、聞き手に近い場所を指す「そこ」を使います！"
+    }
+];
+
+let currentChallengeIndex = 0;
+let challengeScore = 0;
+
+function startChallenge() {
+    currentChallengeIndex = 0;
+    challengeScore = 0;
+    
+    // Ensure panels are cleared
+    document.getElementById('challenge-result-panel').classList.add('hidden');
+    document.getElementById('challenge-current-num').textContent = currentChallengeIndex + 1;
+    document.getElementById('challenge-progress').style.width = '20%';
+    
+    loadChallengeQuestion();
+}
+
+function loadChallengeQuestion() {
+    const q = challengeQuestions[currentChallengeIndex];
+    
+    // Update texts
+    document.getElementById('challenge-emoji-area').textContent = q.emoji;
+    document.getElementById('challenge-situation-text').textContent = q.situation;
+    document.getElementById('challenge-question-text').textContent = q.question;
+    document.getElementById('challenge-current-num').textContent = currentChallengeIndex + 1;
+    
+    // Draw Options Dynamically to make sure they match
+    const container = document.getElementById('challenge-options-container');
+    container.innerHTML = ''; // Clear options
+    
+    q.options.forEach((optText, index) => {
+        const optionLabel = index === 0 ? 'ア' : index === 1 ? 'イ' : 'ウ';
+        const button = document.createElement('button');
+        button.className = "group text-left bg-slate-900 hover:bg-slate-800 active:bg-slate-750 border-2 border-rose-950 hover:border-rose-500 p-4 rounded-2xl flex items-center justify-between transition-all shadow-md w-full";
+        button.onclick = () => submitChallengeAnswer(index);
+        
+        button.innerHTML = `
+            <div class="flex items-center space-x-3">
+                <span class="w-8 h-8 rounded-full bg-slate-800 group-hover:bg-rose-950 text-rose-300 font-black flex items-center justify-center text-sm">${optionLabel}</span>
+                <span class="font-bold text-slate-200 text-base">${optText}</span>
+            </div>
+            <span class="text-rose-900 group-hover:text-rose-500 text-lg">👉</span>
+        `;
+        container.appendChild(button);
+    });
+    
+    // Update Progress Bar
+    const progressPercent = ((currentChallengeIndex + 1) / challengeQuestions.length) * 100;
+    document.getElementById('challenge-progress').style.width = `${progressPercent}%`;
+}
+
+function submitChallengeAnswer(selectedIndex) {
+    const q = challengeQuestions[currentChallengeIndex];
+    const isCorrect = selectedIndex === q.answer;
+    
+    const feedbackPanel = document.getElementById('challenge-feedback-panel');
+    const feedbackIcon = document.getElementById('challenge-fb-icon');
+    const feedbackTitle = document.getElementById('challenge-fb-title');
+    const feedbackExplanation = document.getElementById('challenge-fb-explanation');
+    
+    if (isCorrect) {
+        playSuccessSound();
+        challengeScore++;
+        feedbackIcon.textContent = '🔥⭕';
+        feedbackTitle.textContent = 'せいかい！天才レベル！';
+        feedbackTitle.className = "text-2xl font-black text-rose-400";
+    } else {
+        playFailureSound();
+        feedbackIcon.textContent = '❌';
+        feedbackTitle.textContent = `ざんねん！正解は「${q.options[q.answer]}」でした。`;
+        feedbackTitle.className = "text-2xl font-black text-red-500";
+    }
+    
+    feedbackExplanation.textContent = q.explanation;
+    
+    // Reveal Modal
+    feedbackPanel.classList.remove('hidden');
+}
+
+function nextChallengeQuestion() {
+    // Hide Modal
+    document.getElementById('challenge-feedback-panel').classList.add('hidden');
+    
+    if (currentChallengeIndex < challengeQuestions.length - 1) {
+        currentChallengeIndex++;
+        loadChallengeQuestion();
+    } else {
+        showChallengeResults();
+    }
+}
+
+function showChallengeResults() {
+    // Clear content area
+    document.getElementById('challenge-options-container').innerHTML = '';
+    document.getElementById('challenge-emoji-area').parentElement.classList.add('hidden');
+    
+    // Show results
+    const resultPanel = document.getElementById('challenge-result-panel');
+    resultPanel.classList.remove('hidden');
+    
+    document.getElementById('challenge-final-score').textContent = challengeScore;
+    
+    // Dynamic Design Adjustment based on result
+    const certCard = document.getElementById('challenge-certificate-card');
+    if (challengeScore === challengeQuestions.length) {
+        certCard.className = "bg-slate-950 border-8 border-rose-500 rounded-2xl p-6 shadow-2xl max-w-lg mx-auto relative overflow-hidden bounce-in text-left ring-4 ring-amber-400";
+        playUltraVictorySound();
+    } else {
+        certCard.className = "bg-slate-900 border-8 border-slate-700 rounded-2xl p-6 shadow-2xl max-w-lg mx-auto relative overflow-hidden text-left";
         playSimpleSound(523.25, 0.2);
     }
 }
